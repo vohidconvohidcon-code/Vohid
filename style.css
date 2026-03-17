@@ -1,0 +1,175 @@
+:root {
+    --green: #27ae60;
+    --dark: #2c3e50;
+    --light: #f4f7f6;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), 
+                url('https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1500');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.navbar {
+    background: white;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky; top: 0; z-index: 100;
+}
+
+.logo { font-size: 26px; font-weight: bold; color: var(--green); letter-spacing: 1px; }
+
+.search-bar input {
+    width: 350px; padding: 10px 20px; border-radius: 20px; border: 1px solid #ddd; outline: none;
+}
+
+.container { display: flex; max-width: 1400px; margin: 20px auto; gap: 20px; padding: 0 20px; }
+
+.sidebar, .cart-panel {
+    width: 260px; background: white; padding: 20px; border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); height: fit-content;
+}
+
+.sidebar ul { list-style: none; padding: 0; }
+.sidebar li { padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+.sidebar li:hover { background: #eafaf1; color: var(--green); font-weight: bold; }
+
+.product-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+
+.product-card {
+    background: white; padding: 20px; border-radius: 15px; text-align: center;
+    position: relative; transition: 0.3s; border: 1px solid #eee;
+}
+
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+.brand-logo { position: absolute; top: 10px; left: 10px; width: 35px; height: 35px; object-fit: contain; }
+
+.product-card img.main-img { width: 100%; height: 150px; object-fit: contain; margin: 15px 0; }
+
+.add-btn {
+    background: var(--green); color: white; border: none; width: 100%;
+    padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold;
+}
+
+.cart-items { max-height: 300px; overflow-y: auto; margin: 15px 0; }
+.cart-item { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+
+.buy-btn { width: 100%; padding: 12px; background: var(--dark); color: white; border: none; border-radius: 10px; cursor: pointer; }
+
+/* Стилҳои Модал */
+.modal {
+    display: none; position: fixed; z-index: 2000;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: white; margin: 5% auto; padding: 30px;
+    border-radius: 15px; width: 400px; position: relative;
+}
+
+.close { position: absolute; right: 20px; top: 10px; font-size: 28px; cursor: pointer; }
+
+label { display: block; margin: 15px 0 5px; font-weight: bold; }
+
+input[type="text"], select {
+    width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;
+}
+
+.payment-options { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+.pay-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; border: 1px solid #eee; border-radius: 8px; cursor: pointer;
+}
+
+.confirm-btn {
+    width: 100%; padding: 15px; background: var(--green); color: white;
+    border: none; border-radius: 10px; margin-top: 20px; cursor: pointer; font-size: 16px;
+}
+
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.pay-card {
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pay-card img { width: 30px; height: 30px; margin-bottom: 5px; object-fit: contain; }
+.pay-card input { display: none; } /* Пинҳон кардани тугмаи радио */
+
+.pay-card:has(input:checked) {
+    border-color: #27ae60;
+    background-color: #eafaf1;
+}
+
+.final-total {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+    color: #2c3e50;
+}
+
+.cash-icon { font-size: 24px; margin-bottom: 5px; }
+
+/* Адаптатсия барои телефонҳо */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Элементҳо паси ҳам меистанд */
+        padding: 10px;
+    }
+
+    .sidebar {
+        width: 100%;
+        order: -1; /* Меню дар боло меистад */
+        margin-bottom: 15px;
+    }
+
+    .cart-panel {
+        width: 100%;
+        position: fixed; /* Сабад дар поёни экран меистад */
+        bottom: 0;
+        left: 0;
+        border-radius: 15px 15px 0 0;
+        z-index: 1000;
+        display: none; /* Бо тугма кушода мешавад */
+    }
+
+    .search-bar input {
+        width: 150px; /* Стрики ҷустуҷӯ дар телефон хурдтар мешавад */
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr 1fr; /* Дар телефон 2 маҳсулот дар як қатор */
+        gap: 10px;
+    }
+
+    .modal-content {
+        width: 90%; /* Равзанаи пардохт дар телефон васеътар мешавад */
+        margin: 10% auto;
+        padding: 15px;
+    }
+}
