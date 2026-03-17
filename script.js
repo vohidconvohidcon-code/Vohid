@@ -1,5 +1,5 @@
-const TELEGRAM_TOKEN = '76543210:AAHzX...'; // Токени бот, ки аз @BotFather гирифтед
-const CHAT_ID = '123456789'; // ID-и шумо, ки аз @userinfobot гирифтед
+const TELEGRAM_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; // Токени бот, ки аз @BotFather гирифтед
+const CHAT_ID = '1288252509'; // ID-и шумо, ки аз @userinfobot гирифтед
 
 // Пойгоҳи маҳсулот
 const products = [
