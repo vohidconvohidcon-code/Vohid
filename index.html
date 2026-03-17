@@ -3,100 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интернет-магазин PAYKAR Clone</title>
+    <title>Пайкар - Интернет Магазин</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
- <div id="orderModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 style="color: #27ae60;">Оформление заказа</h2>
-        <hr>
-        
-        <div class="form-group">
-            <label>Ваше имя:</label>
-            <input type="text" id="userName" placeholder="Например: Ахмед">
-        </div>
-
-        <div class="form-group">
-            <label>Телефон для связи:</label>
-            <input type="text" id="userPhone" placeholder="+992 900 00 0000">
-        </div>
-
-        <div class="form-group">
-            <label>Способ получения:</label>
-            <select id="deliveryType" onchange="toggleAddress()">
-                <option value="delivery">Доставка (курьером)</option>
-                <option value="pickup">Самовывоз (из магазина)</option>
-            </select>
-        </div>
-
-        <div id="addressBlock" class="form-group">
-            <label>Адрес доставки:</label>
-            <input type="text" id="userAddress" placeholder="Район, улица, дом...">
-        </div>
-
-        <label>Выберите способ оплаты:</label>
-        <div class="payment-grid">
-            <label class="pay-card">
-                <input type="radio" name="payment" value="Alif Mobi">
-                <img src="https://alif.tj/img/alif-logo.png" alt="Alif">
-                <span>Alif Mobi</span>
-            </label>
-            <label class="pay-card">
-                <input type="radio" name="payment" value="Dushanbe City">
-                <img src="https://dushanbecity.tj/favicon.ico" alt="DC">
-                <span>Dushanbe City</span>
-            </label>
-            <label class="pay-card">
-                <input type="radio" name="payment" value="Cash" checked>
-                <div class="cash-icon">💵</div>
-                <span>Наличными</span>
-            </label>
-        </div>
-
-        <div class="final-total">Итого к оплате: <span id="modal-total">0</span> смн.</div>
-        <button class="confirm-btn" onclick="processOrder()">Оплатить и заказать</button>
-    </div>
-</div>
-
-    <header>
-        <div class="navbar">
-            <div class="logo">PAYKAR</div>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Поиск товаров..." onkeyup="searchProduct()">
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fa-solid fa-basket-shopping"></i> PAYKAR
             </div>
-            <div class="cart-info">🛒 Корзина: <span id="cart-count">0</span></div>
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Поиск товаров..." oninput="searchProducts()">
+            </div>
+            <div class="mobile-cart-btn" onclick="toggleMobileCart()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="mobile-cart-badge" class="badge">0</span>
+            </div>
         </div>
     </header>
 
-    <div class="container">
+    <div class="main-layout">
+        
         <aside class="sidebar">
             <h3>Каталог</h3>
-            <ul id="category-list">
-                <li onclick="filterProducts('all')">Все товары</li>
-                <li onclick="filterProducts('dairy')">Молочные продукты</li>
-                <li onclick="filterProducts('bakery')">Выпечка и хлеб</li>
-                <li onclick="filterProducts('drinks')">Напитки</li>
+            <ul class="category-list">
+                <li class="active" onclick="filterProducts('all', this)">Все товары</li>
+                <li onclick="filterProducts('dairy', this)">Молочные продукты</li>
+                <li onclick="filterProducts('bakery', this)">Выпечка и хлеб</li>
+                <li onclick="filterProducts('drinks', this)">Напитки</li>
+                <li onclick="filterProducts('fruits', this)">Фрукты и овощи</li>
             </ul>
         </aside>
 
-        <main class="content">
+        <main class="products-section">
+            <h2 id="category-title">Все товары</h2>
             <div class="product-grid" id="product-grid">
                 </div>
         </main>
 
-        <aside class="cart-panel">
-            <h3>Ваша корзина</h3>
-            <div id="cart-items" class="cart-items">
-                <p class="empty-text">Корзина пуста</p>
+        <aside class="cart-sidebar" id="cartSidebar">
+            <div class="cart-header">
+                <h3><i class="fa-solid fa-cart-shopping"></i> Корзина</h3>
+                <i class="fa-solid fa-xmark close-cart" onclick="toggleMobileCart()"></i>
             </div>
-            <div class="cart-total">
-                <strong>Итого:</strong> <span id="total-price">0</span> смн.
+            <div class="cart-items" id="cart-items">
+                <div class="empty-cart">Корзина пуста</div>
             </div>
-            <button class="buy-btn">Оформить заказ</button>
+            <div class="cart-footer">
+                <div class="total-row">
+                    <span>Итого:</span>
+                    <strong id="total-price">0.00 смн</strong>
+                </div>
+                <button class="checkout-btn" onclick="openCheckout()">Оформить заказ</button>
+            </div>
         </aside>
+    </div>
+
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCheckout()">&times;</span>
+            <h2>Оформление заказа</h2>
+            <div class="checkout-form">
+                <input type="text" id="clientName" placeholder="Ваше Имя" required>
+                <input type="tel" id="clientPhone" placeholder="Ваш Телефон (+992...)" required>
+                
+                <select id="deliveryType" onchange="toggleAddress()">
+                    <option value="delivery">Доставка до двери</option>
+                    <option value="pickup">Самовывоз (бесплатно)</option>
+                </select>
+                
+                <input type="text" id="clientAddress" placeholder="Адрес доставки (Улица, Дом)">
+
+                <div class="payment-methods">
+                    <label class="pay-method">
+                        <input type="radio" name="payment" value="Alif Mobi" checked>
+                        <span><i class="fa-solid fa-wallet"></i> Alif Mobi</span>
+                    </label>
+                    <label class="pay-method">
+                        <input type="radio" name="payment" value="Наличные">
+                        <span><i class="fa-solid fa-money-bill"></i> Наличными</span>
+                    </label>
+                </div>
+
+                <button class="pay-btn" onclick="sendOrder()" id="sendBtn">Подтвердить и Заказать</button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
