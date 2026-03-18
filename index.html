@@ -9,6 +9,37 @@
 </head>
 <body>
 
+    <button class="nav-btn" onclick="openAdmin()">Админ</button>
+
+<div id="admin-modal" class="modal">
+    <div class="modal-box admin-box">
+        <span class="close-modal" onclick="closeAdmin()">&times;</span>
+        <h2>Панели Админ</h2>
+        <div id="admin-auth">
+            <input type="password" id="admin-pass" placeholder="Паролро ворид кунед" class="modal-input">
+            <button class="buy-btn" onclick="checkAdminPass()">Ворид шуд</button>
+        </div>
+        
+        <div id="admin-content" style="display:none;">
+            <h3>Иловаи маҳсулот</h3>
+            <input type="text" id="p-name" placeholder="Номи маҳсулот" class="modal-input">
+            <input type="text" id="p-img" placeholder="Ссылкаи расм (URL)" class="modal-input">
+            <input type="number" id="p-price" placeholder="Нарх" class="modal-input">
+            <select id="p-cat" class="modal-input">
+                <option value="milk">Ширӣ</option>
+                <option value="drinks">Нӯшокиҳо</option>
+                <option value="food">Хӯрокворӣ</option>
+            </select>
+            <label><input type="checkbox" id="p-sale"> Акция (Тахфиф)?</label>
+            <button class="send-order-btn" onclick="addNewProduct()">Илова кардан</button>
+            
+            <hr>
+            <h3>Идоракунӣ</h3>
+            <div id="admin-product-list"></div>
+        </div>
+    </div>
+</div>
+
     <header class="header">
         <div class="header-container container">
             <div class="logo" onclick="showSection('shop')">🛒 ЁВАР</div>
