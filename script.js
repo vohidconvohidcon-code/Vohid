@@ -1,118 +1,160 @@
-const TELEGRAM_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; 
-const CHAT_ID = '1288252509'; 
+// ТАНЗИМОТ
+const TG_TOKEN = '7716104445:AAH3mB5lU_qR_Yp5fD1_NqIqf3OqN7pI3_Q';
+const CHAT_ID = '6013669149';
 
-let cart = [+992175333223];
+let cart = [];
 
-// Гузариш байни мағоза ва таърих
-function showSection(section) {
-    const shop = document.getElementById('shop-section');
-    const history = document.getElementById('history-section');
-    const tabs = document.querySelectorAll('.tab-btn');
-
-    tabs.forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-
-    if (section === 'shop') {
-        shop.style.display = 'block';
-        history.style.display = 'none';
-    } else {
-        shop.style.display = 'none';
-        history.style.display = 'block';
-        loadHistory();
-    }
+// ГУЗАРИШ БАЙНИ БАХШҲО
+function showSection(sectionId) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(sectionId + '-section').classList.add('active');
+    document.getElementById('btn-' + sectionId).classList.add('active');
+    
+    if(sectionId === 'history') loadHistory();
 }
 
-// Функсияҳои сабад
+// САБАД
+function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('active');
+    const display = document.getElementById('cart-sidebar').classList.contains('active') ? 'block' : 'none';
+    document.getElementById('cart-overlay').style.display = display;
+}
+
 function addToCart(id, name, price) {
-    const item = cart.find(i => i.id === id);
-    if (item) item.qty++; else cart.push({ id, name, price, qty: 1 });
-    updateCart();
+    const found = cart.find(i => i.id === id);
+    if(found) {
+        found.qty++;
+    } else {
+        cart.push({ id, name, price, qty: 1 });
+    }
+    updateCartUI();
 }
 
-function updateCart() {
-    const list = document.getElementById('cart-items');
-    const total = document.getElementById('total-price');
+function updateCartUI() {
+    const list = document.getElementById('cart-content');
+    const totalDisplay = document.getElementById('grand-total');
     const badge = document.getElementById('cart-badge');
     
-    let sum = 0;
-    list.innerHTML = cart.map(i => {
-        sum += i.price * i.qty;
-        return `<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span>${i.name} x${i.qty}</span>
-                    <b>${(i.price * i.qty).toFixed(2)} смн</b>
-                </div>`;
-    }).join('');
+    let total = 0;
+    if(cart.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:#888;">Сабад холӣ аст</p>';
+    } else {
+        list.innerHTML = cart.map(item => {
+            total += item.price * item.qty;
+            return `
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #f9f9f9; padding-bottom:5px;">
+                    <div><b>${item.name}</b><br><small>${item.price} смн x ${item.qty}</small></div>
+                    <b>${(item.price * item.qty).toFixed(2)}</b>
+                </div>
+            `;
+        }).join('');
+    }
     
     badge.innerText = cart.length;
-    total.innerText = sum.toFixed(2);
+    totalDisplay.innerText = total.toFixed(2) + ' смн';
 }
 
-function toggleCart() {
-    document.getElementById('sidebar').classList.toggle('open');
-    const isOpen = document.getElementById('sidebar').classList.contains('open');
-    document.getElementById('overlay').style.display = isOpen ? 'block' : 'none';
+// ФИЛТРИ КАТЕГОРИЯ
+function filterItems(cat, event) {
+    document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    document.querySelectorAll('.product-item').forEach(item => {
+        if(cat === 'all' || item.getAttribute('data-cat') === cat) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
 }
 
-// Фармоиш
-function openCheckout() {
-    if (cart.length === 0) return alert("Сабад холӣ аст!");
+// ПАРДОХТ ВА ТЕЛЕГРАМ
+function goToPayment() {
+    if(cart.length === 0) return alert("Сабад холӣ аст!");
     toggleCart();
-    document.getElementById('checkoutModal').style.display = 'flex';
+    document.getElementById('pay-modal').style.display = 'flex';
 }
-function closeCheckout() { document.getElementById('checkoutModal').style.display = 'none'; }
 
-// Фиристодан
-async function sendOrder() {
-    const name = document.getElementById('custName').value;
-    const phone = document.getElementById('custPhone').value;
-    const file = document.getElementById('receiptImg').files[0];
-    const btn = document.getElementById('sendBtn');
+function closePayModal() {
+    document.getElementById('pay-modal').style.display = 'none';
+}
 
-    if (!name || !phone || !file) return alert("Лутфан ҳамаро пур кунед!");
+async function submitFinalOrder() {
+    const name = document.getElementById('user-name').value;
+    const phone = document.getElementById('user-phone').value;
+    const receipt = document.getElementById('receipt-input').files[0];
+    const btn = document.getElementById('finish-order-btn');
 
-    btn.innerText = "Фиристода истодааст...";
+    if(!name || !phone || !receipt) return alert("Лутфан ҳамаи маълумотро пур кунед ва чекро бор кунед!");
+
+    btn.innerText = "Интизор...";
     btn.disabled = true;
 
-    let itemsText = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
-    let total = document.getElementById('total-price').innerText;
-    let msg = `📦 ЗАКАЗ: ${itemsText}\n👤 МИЗОҶ: ${name}\n📞 ТЕЛ: ${phone}\n💰 ҶАМЪ: ${total} смн`;
+    let orderList = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
+    let total = document.getElementById('grand-total').innerText;
+    
+    let caption = `📦 ФАРМОИШИ НАВ\n👤 Мизоҷ: ${name}\n📞 Тел: ${phone}\n🛒 Заказ: ${orderList}\n💰 Ҷамъ: ${total}`;
 
     const formData = new FormData();
     formData.append('chat_id', CHAT_ID);
-    formData.append('photo', file);
-    formData.append('caption', msg);
+    formData.append('photo', receipt);
+    formData.append('caption', caption);
 
     try {
-        const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
-        if (res.ok) {
-            saveOrderLocally(itemsText, total);
-            alert("Фармоиш фиристода шуд!");
-            cart = []; updateCart(); closeCheckout();
+        const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if(response.ok) {
+            saveToHistory(orderList, total);
+            alert("✅ Фармоиши шумо қабул шуд! Админ тафтиш мекунад.");
+            cart = [];
+            updateCartUI();
+            closePayModal();
+        } else {
+            alert("Хатогӣ дар бот!");
         }
-    } catch (e) { alert("Хатогии интернет!"); }
-    finally { btn.innerText = "Фиристодан"; btn.disabled = false; }
+    } catch (e) {
+        alert("Хатои шабака!");
+    } finally {
+        btn.innerText = "Фиристодани Фармоиш";
+        btn.disabled = false;
+    }
 }
 
-// Таърих дар LocalStorage
-function saveOrderLocally(items, total) {
-    let history = JSON.parse(localStorage.getItem('orders')) || [];
-    history.unshift({ date: new Date().toLocaleString(), items, total, status: 'Дар ҳоли интизор' });
-    localStorage.setItem('orders', JSON.stringify(history));
+// ТАЪРИХ (LOCALSTORAGE)
+function saveToHistory(items, total) {
+    let history = JSON.parse(localStorage.getItem('user_history')) || [];
+    history.unshift({
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        items: items,
+        total: total,
+        status: 'Дар ҳоли интизор'
+    });
+    localStorage.setItem('user_history', JSON.stringify(history));
 }
 
 function loadHistory() {
-    const list = document.getElementById('history-list');
-    let history = JSON.parse(localStorage.getItem('orders')) || [];
-    if (history.length === 0) {
-        list.innerHTML = "<p>Таърих холӣ аст.</p>";
+    const container = document.getElementById('history-container');
+    let history = JSON.parse(localStorage.getItem('user_history')) || [];
+    
+    if(history.length === 0) {
+        container.innerHTML = '<p style="text-align:center;margin-top:50px;color:#888;">Шумо то ҳол харид накардаед.</p>';
         return;
     }
-    list.innerHTML = history.map(h => `
+    
+    container.innerHTML = history.map(h => `
         <div class="history-card">
-            <p><small>${h.date}</small></p>
-            <p><b>Маҳсулот:</b> ${h.items}</p>
-            <p><b>Ҷамъ:</b> ${h.total} смн</p>
-            <p class="status">Статус: ${h.status}</p>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <small>${h.date}</small>
+                <span class="status-tag">${h.status}</span>
+            </div>
+            <p><b>Заказ:</b> ${h.items}</p>
+            <p><b>Маблағ:</b> <span style="color:#E30613; font-weight:bold;">${h.total}</span></p>
         </div>
     `).join('');
 }
