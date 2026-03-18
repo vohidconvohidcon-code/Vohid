@@ -92,32 +92,35 @@
         </div>
     </aside>
 
-    <div id="pay-modal" class="modal">
-        <div class="modal-box">
-            <span class="close-modal" onclick="closePayModal()">&times;</span>
-            <h2>Тасдиқи пардохт</h2>
-            
-            <div class="input-group">
-                <input type="text" id="user-name" placeholder="Номи шумо" required>
-            </div>
-            <div class="input-group">
-                <input type="tel" id="user-phone" placeholder="900 00 00 00" required>
-            </div>
-
-            <div class="payment-details">
-                <p>Маблағро ба ин корт гузаронед:</p>
-                <div class="card-display">💳 9988 1122 3344 5566</div>
-                <p class="bank-list">Alif / Humo / DC / Эсхата</p>
-            </div>
-
-            <div class="upload-area">
-                <label for="receipt-input">Скриншоти чекро бор кунед:</label>
-                <input type="file" id="receipt-input" accept="image/*">
-            </div>
-
-            <button id="finish-order-btn" class="send-order-btn" onclick="submitFinalOrder()">Фиристодани Фармоиш</button>
+   <div id="pay-modal" class="modal">
+    <div class="modal-box">
+        <span class="close-modal" onclick="closePayModal()">&times;</span>
+        <h2 style="color: #E30613;">Тасдиқи фармоиш</h2>
+        
+        <div class="input-group">
+            <input type="text" id="user-name" placeholder="Номи шумо" required>
         </div>
+        <div class="input-group">
+            <input type="tel" id="user-phone" placeholder="900 00 00 00" required>
+        </div>
+
+        <div class="payment-details" style="background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc;">
+            <p style="margin-bottom: 5px; font-weight: 600;">Маблағро ба ин рақам гузаронед:</p>
+            <div class="copy-box" onclick="copyNumber('+992900000000')" title="Барои нусхабардорӣ пахш кунед">
+                <span id="p-number">900 00 00 00</span>
+                <i class="fas fa-copy" style="margin-left: 10px; color: #E30613;"></i>
+            </div>
+            <p style="font-size: 11px; color: #777; margin-top: 5px;">(Алиф / Душанбе Сити / Ҳумо / Эсхата)</p>
+        </div>
+
+        <div class="upload-area" style="margin-top: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-size: 13px;">Скриншоти чекро бор кунед:</label>
+            <input type="file" id="receipt-input" accept="image/*" style="font-size: 12px;">
+        </div>
+
+        <button id="finish-order-btn" class="send-order-btn" onclick="submitFinalOrder()">Тасдиқ ва Фиристодан</button>
     </div>
+</div>
 
     <script src="script.js"></script>
 </body>
