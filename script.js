@@ -158,3 +158,72 @@ function loadHistory() {
         </div>
     `).join('');
 }
+
+// 1. Функсияи нусхабардорӣ
+function copyNumber(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const numElem = document.getElementById('p-number');
+        const originalText = numElem.innerText;
+        numElem.innerText = "НУСХАБАРДОРӢ ШУД!";
+        numElem.style.color = "green";
+        
+        setTimeout(() => {
+            numElem.innerText = originalText;
+            numElem.style.color = "#2d3436";
+        }, 1500);
+    });
+}
+
+// 2. Функсияи фиристодан (бо ислоҳи хатогиҳо)
+async function submitFinalOrder() {
+    const name = document.getElementById('user-name').value;
+    const phone = document.getElementById('user-phone').value;
+    const fileInput = document.getElementById('receipt-input');
+    const receipt = fileInput.files[0];
+    const btn = document.getElementById('finish-order-btn');
+
+    if(!name || !phone || !receipt) {
+        alert("Лутфан ном, телефон ва скриншоти чекро пур кунед!");
+        return;
+    }
+
+    btn.innerText = "Дар ҳоли фиристодан...";
+    btn.disabled = true;
+
+    const orderList = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
+    const total = document.getElementById('grand-total').innerText;
+    
+    const caption = `📦 ФАРМОИШИ НАВ\n👤 Мизоҷ: ${name}\n📞 Тел: ${phone}\n🛒 Заказ: ${orderList}\n💰 Ҷамъ: ${total}`;
+
+    const formData = new FormData();
+    formData.append('chat_id', CHAT_ID);
+    formData.append('photo', receipt);
+    formData.append('caption', caption);
+
+    try {
+        // Истифодаи fetch бо параметрҳои дуруст
+        const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if(result.ok) {
+            saveToHistory(orderList, total);
+            alert("✅ Фармоиш бо муваффақият фиристода шуд!");
+            cart = [];
+            updateCartUI();
+            closePayModal();
+            fileInput.value = ""; // тоза кардани файл
+        } else {
+            alert("Хатогии Бот: " + result.description);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Хатогии интернет! Санҷед, ки VPN хомӯш аст ё интернет кор мекунад.");
+    } finally {
+        btn.innerText = "Тасдиқ ва Фиристодан";
+        btn.disabled = false;
+    }
+}
