@@ -227,3 +227,109 @@ async function submitFinalOrder() {
         btn.disabled = false;
     }
 }
+
+// Пароли админ (метавонед иваз кунед)
+const ADMIN_PASSWORD = "admin777";
+
+// Маҳсулотҳои аввалия (агар база холӣ бошад)
+const defaultProducts = [
+    { id: 1, name: "Шири Саодат 1л", price: 12, img: "https://vash-vibor.tj/wp-content/uploads/2021/05/moloko-saodat-25.jpg", cat: "milk", sale: false },
+    { id: 2, name: "Оби Сиёма 1.5л", price: 5, img: "https://siyoma.tj/wp-content/uploads/2020/02/1.5.png", cat: "drinks", sale: false }
+];
+
+// Гирифтани маҳсулотҳо аз LocalStorage
+let products = JSON.parse(localStorage.getItem('my_store_products')) || defaultProducts;
+
+function initStore() {
+    renderProducts();
+}
+
+function renderProducts() {
+    const grid = document.getElementById('main-grid');
+    if(!grid) return;
+
+    grid.innerHTML = products.map(p => `
+        <div class="product-item" data-cat="${p.cat}">
+            <div class="img-box">
+                ${p.sale ? '<span class="sale-badge">АКЦИЯ</span>' : ''}
+                <img src="${p.img}" alt="${p.name}">
+            </div>
+            <div class="product-info">
+                <h3>${p.name}</h3>
+                <p class="item-price">${p.price.toFixed(2)} смн</p>
+                <button class="buy-btn" onclick="addToCart(${p.id}, '${p.name}', ${p.price})">Илова кардан</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ФУНКСИЯҲОИ АДМИН
+function openAdmin() {
+    document.getElementById('admin-modal').style.display = 'flex';
+}
+
+function closeAdmin() {
+    document.getElementById('admin-modal').style.display = 'none';
+}
+
+function checkAdminPass() {
+    const pass = document.getElementById('admin-pass').value;
+    if(pass === ADMIN_PASSWORD) {
+        document.getElementById('admin-auth').style.display = 'none';
+        document.getElementById('admin-content').style.display = 'block';
+        renderAdminList();
+    } else {
+        alert("Парол хатост!");
+    }
+}
+
+function addNewProduct() {
+    const name = document.getElementById('p-name').value;
+    const img = document.getElementById('p-img').value;
+    const price = parseFloat(document.getElementById('p-price').value);
+    const cat = document.getElementById('p-cat').value;
+    const sale = document.getElementById('p-sale').checked;
+
+    if(!name || !price || !img) return alert("Пур кунед!");
+
+    const newP = {
+        id: Date.now(),
+        name,
+        price,
+        img,
+        cat,
+        sale
+    };
+
+    products.push(newP);
+    saveProducts();
+    renderProducts();
+    renderAdminList();
+    alert("Маҳсулот илова шуд!");
+}
+
+function deleteProduct(id) {
+    if(confirm("Нест карда шавад?")) {
+        products = products.filter(p => p.id !== id);
+        saveProducts();
+        renderProducts();
+        renderAdminList();
+    }
+}
+
+function renderAdminList() {
+    const list = document.getElementById('admin-product-list');
+    list.innerHTML = products.map(p => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding:5px;">
+            <span>${p.name}</span>
+            <button onclick="deleteProduct(${p.id})" style="color:red; border:none; background:none; cursor:pointer;">Нест кардан</button>
+        </div>
+    `).join('');
+}
+
+function saveProducts() {
+    localStorage.setItem('my_store_products', JSON.stringify(products));
+}
+
+// Дар охири файл даъват кунед
+document.addEventListener('DOMContentLoaded', initStore);
