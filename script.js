@@ -1,102 +1,118 @@
 const TELEGRAM_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; 
 const CHAT_ID = '1288252509'; 
 
-let cart = [9762000027554640];
+let cart = [+992175333223];
 
-// 1. Гузариш байни бахшҳо
-function showSection(name) {
-    if(name === 'shop') {
-        document.getElementById('shop-section').style.display = 'block';
-        document.getElementById('history-section').style.display = 'none';
+// Гузариш байни мағоза ва таърих
+function showSection(section) {
+    const shop = document.getElementById('shop-section');
+    const history = document.getElementById('history-section');
+    const tabs = document.querySelectorAll('.tab-btn');
+
+    tabs.forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (section === 'shop') {
+        shop.style.display = 'block';
+        history.style.display = 'none';
     } else {
-        document.getElementById('shop-section').style.display = 'none';
-        document.getElementById('history-section').style.display = 'block';
-        renderHistory();
+        shop.style.display = 'none';
+        history.style.display = 'block';
+        loadHistory();
     }
 }
 
-// 2. Илова ба сабад
+// Функсияҳои сабад
 function addToCart(id, name, price) {
-    const exist = cart.find(i => i.id === id);
-    if (exist) exist.qty++; else cart.push({ id, name, price, qty: 1 });
-    updateUI();
+    const item = cart.find(i => i.id === id);
+    if (item) item.qty++; else cart.push({ id, name, price, qty: 1 });
+    updateCart();
 }
 
-function updateUI() {
+function updateCart() {
     const list = document.getElementById('cart-items');
-    const totalElem = document.getElementById('total-price');
+    const total = document.getElementById('total-price');
     const badge = document.getElementById('cart-badge');
-    let total = 0;
-    list.innerHTML = cart.map(item => {
-        total += item.price * item.qty;
-        return `<div style="padding:5px 0; border-bottom:1px solid #eee;">${item.name} x${item.qty} - <b>${(item.price*item.qty).toFixed(2)}</b></div>`;
-    }).join('');
-    badge.innerText = cart.length;
-    totalElem.innerText = total.toFixed(2) + ' смн';
-}
-
-// 3. Таърихи Фармоиш (LocalStorage)
-function saveToHistory(order) {
-    let history = JSON.parse(localStorage.getItem('myOrders')) || [];
-    history.unshift(order); // Закази навро ба аввал мегузорад
-    localStorage.setItem('myOrders', JSON.stringify(history));
-}
-
-function renderHistory() {
-    const list = document.getElementById('order-history-list');
-    let history = JSON.parse(localStorage.getItem('myOrders')) || [];
-    if(history.length === 0) return;
     
-    list.innerHTML = history.map(h => `
-        <div class="history-item">
-            <p><b>Сана:</b> ${h.date}</p>
-            <p><b>Маҳсулот:</b> ${h.items}</p>
-            <p><b>Ҷамъ:</b> ${h.total}</p>
-            <p><b>Статус:</b> <span class="status-waiting">${h.status}</span></p>
-        </div>
-    `).join('');
+    let sum = 0;
+    list.innerHTML = cart.map(i => {
+        sum += i.price * i.qty;
+        return `<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span>${i.name} x${i.qty}</span>
+                    <b>${(i.price * i.qty).toFixed(2)} смн</b>
+                </div>`;
+    }).join('');
+    
+    badge.innerText = cart.length;
+    total.innerText = sum.toFixed(2);
 }
 
-// 4. Фиристодан ба Telegram
+function toggleCart() {
+    document.getElementById('sidebar').classList.toggle('open');
+    const isOpen = document.getElementById('sidebar').classList.contains('open');
+    document.getElementById('overlay').style.display = isOpen ? 'block' : 'none';
+}
+
+// Фармоиш
+function openCheckout() {
+    if (cart.length === 0) return alert("Сабад холӣ аст!");
+    toggleCart();
+    document.getElementById('checkoutModal').style.display = 'flex';
+}
+function closeCheckout() { document.getElementById('checkoutModal').style.display = 'none'; }
+
+// Фиристодан
 async function sendOrder() {
-    const name = document.getElementById('clientName').value;
-    const phone = document.getElementById('clientPhone').value;
-    const fileInput = document.getElementById('receiptFile');
+    const name = document.getElementById('custName').value;
+    const phone = document.getElementById('custPhone').value;
+    const file = document.getElementById('receiptImg').files[0];
     const btn = document.getElementById('sendBtn');
 
-    if (!name || !phone || fileInput.files.length === 0) return alert("Лутфан ҳамаро пур кунед!");
+    if (!name || !phone || !file) return alert("Лутфан ҳамаро пур кунед!");
 
     btn.innerText = "Фиристода истодааст...";
     btn.disabled = true;
 
-    let orderInfo = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
-    let totalStr = document.getElementById('total-price').innerText;
-
-    let text = `📦 ЗАКАЗИ НАВ\n👤 Мизоҷ: ${name}\n📞 Тел: ${phone}\n🛒: ${orderInfo}\n💰: ${totalStr}`;
+    let itemsText = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
+    let total = document.getElementById('total-price').innerText;
+    let msg = `📦 ЗАКАЗ: ${itemsText}\n👤 МИЗОҶ: ${name}\n📞 ТЕЛ: ${phone}\n💰 ҶАМЪ: ${total} смн`;
 
     const formData = new FormData();
     formData.append('chat_id', CHAT_ID);
-    formData.append('photo', fileInput.files[0]);
-    formData.append('caption', text);
+    formData.append('photo', file);
+    formData.append('caption', msg);
 
     try {
         const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
         if (res.ok) {
-            // Сабт дар таърих
-            saveToHistory({
-                date: new Date().toLocaleString(),
-                items: orderInfo,
-                total: totalStr,
-                status: "Дар ҳоли интизор (Админ тафтиш мекунад)"
-            });
-            alert("Заказ қабул шуд!");
-            cart = []; updateUI(); closeCheckout();
+            saveOrderLocally(itemsText, total);
+            alert("Фармоиш фиристода шуд!");
+            cart = []; updateCart(); closeCheckout();
         }
-    } catch (e) { alert("Хато!"); }
-    finally { btn.innerText = "Тасдиқ ва фиристодан"; btn.disabled = false; }
+    } catch (e) { alert("Хатогии интернет!"); }
+    finally { btn.innerText = "Фиристодан"; btn.disabled = false; }
 }
 
-// Функсияҳои ёрирасон
-function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); document.getElementById('cartOverlay').style.display = document.getElementById('cartSidebar').classList.contains('open') ? 'block' : 'none'; }
-function openCheckout() { if(cart.length>0) document.getElementById('checkoutModal').style.display='flex'; }
-function closeCheckout() { document.getElementById('checkoutModal').style.display='none'; }
+// Таърих дар LocalStorage
+function saveOrderLocally(items, total) {
+    let history = JSON.parse(localStorage.getItem('orders')) || [];
+    history.unshift({ date: new Date().toLocaleString(), items, total, status: 'Дар ҳоли интизор' });
+    localStorage.setItem('orders', JSON.stringify(history));
+}
+
+function loadHistory() {
+    const list = document.getElementById('history-list');
+    let history = JSON.parse(localStorage.getItem('orders')) || [];
+    if (history.length === 0) {
+        list.innerHTML = "<p>Таърих холӣ аст.</p>";
+        return;
+    }
+    list.innerHTML = history.map(h => `
+        <div class="history-card">
+            <p><small>${h.date}</small></p>
+            <p><b>Маҳсулот:</b> ${h.items}</p>
+            <p><b>Ҷамъ:</b> ${h.total} смн</p>
+            <p class="status">Статус: ${h.status}</p>
+        </div>
+    `).join('');
+}
