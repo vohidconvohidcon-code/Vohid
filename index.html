@@ -3,95 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ёвар - Интернет Магазин</title>
+    <title>Супермаркет ЁВАР - Онлайн магазин</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <header class="header">
-        <div class="header-container">
-            <div class="logo">
-                <i class="fa-solid fa-basket-shopping"></i> EVAR
-            </div>
-            <div class="search-box">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Поиск товаров..." oninput="searchProducts()">
-            </div>
-            <div class="mobile-cart-btn" onclick="toggleMobileCart()">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span id="mobile-cart-badge" class="badge">0</span>
+        <div class="header-top">
+            <div class="container top-bar">
+                <span><i class="fa-solid fa-phone"></i> +992 44 600 00 00</span>
+                <span>Доставка по г. Душанбе 24/7</span>
             </div>
         </div>
+        <div class="header-main container">
+            <div class="logo">
+                <i class="fa-solid fa-cart-arrow-down"></i> ЁВАР
+            </div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Я ищу..." oninput="searchProducts()">
+                <button><i class="fa-solid fa-search"></i></button>
+            </div>
+            <div class="cart-btn" onclick="toggleCart()">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span class="cart-text">Корзина</span>
+                <span id="cart-badge" class="badge">0</span>
+            </div>
+        </div>
+        
+        <nav class="category-nav">
+            <div class="container">
+                <ul class="cat-list">
+                    <li class="active" onclick="filterProducts('all', this)">Все товары</li>
+                    <li onclick="filterProducts('dairy', this)"><i class="fa-solid fa-cheese"></i> Молочка</li>
+                    <li onclick="filterProducts('bakery', this)"><i class="fa-solid fa-bread-slice"></i> Выпечка</li>
+                    <li onclick="filterProducts('drinks', this)"><i class="fa-solid fa-bottle-water"></i> Напитки</li>
+                    <li onclick="filterProducts('fruits', this)"><i class="fa-solid fa-apple-whole"></i> Фрукты</li>
+                    <li onclick="filterProducts('meat', this)"><i class="fa-solid fa-drumstick-bite"></i> Мясо</li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
-    <div class="main-layout">
-        
-        <aside class="sidebar">
-            <h3>Каталог</h3>
-            <ul class="category-list">
-                <li class="active" onclick="filterProducts('all', this)">Все товары</li>
-                <li onclick="filterProducts('dairy', this)">Молочные продукты</li>
-                <li onclick="filterProducts('bakery', this)">Выпечка и хлеб</li>
-                <li onclick="filterProducts('drinks', this)">Напитки</li>
-                <li onclick="filterProducts('fruits', this)">Фрукты и овощи</li>
-            </ul>
-        </aside>
+    <section class="hero-banner container">
+        <div class="banner-content">
+            <h2>Свежие продукты с доставкой на дом!</h2>
+            <p>Скидки до 20% на все фрукты и овощи этой осенью.</p>
+        </div>
+    </section>
 
-        <main class="products-section">
-            <h2 id="category-title">Все товары</h2>
-            <div class="product-grid" id="product-grid">
-                </div>
-        </main>
+    <main class="container main-content">
+        <h2 class="section-title" id="category-title">Популярные товары</h2>
+        <div class="product-grid" id="product-grid">
+            </div>
+    </main>
 
-        <aside class="cart-sidebar" id="cartSidebar">
-            <div class="cart-header">
-                <h3><i class="fa-solid fa-cart-shopping"></i> Корзина</h3>
-                <i class="fa-solid fa-xmark close-cart" onclick="toggleMobileCart()"></i>
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <aside class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Ваша корзина</h3>
+            <button class="close-cart" onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
             </div>
-            <div class="cart-items" id="cart-items">
-                <div class="empty-cart">Корзина пуста</div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Итого:</span>
+                <strong id="total-price">0.00 смн</strong>
             </div>
-            <div class="cart-footer">
-                <div class="total-row">
-                    <span>Итого:</span>
-                    <strong id="total-price">0.00 смн</strong>
-                </div>
-                <button class="checkout-btn" onclick="openCheckout()">Оформить заказ</button>
-            </div>
-        </aside>
-    </div>
+            <button class="checkout-btn" onclick="openCheckout()">Оформить заказ</button>
+        </div>
+    </aside>
 
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeCheckout()">&times;</span>
-            <h2>Оформление заказа</h2>
-            <div class="checkout-form">
+            <h2 class="modal-title">Оформление заказа</h2>
+            
+            <div class="form-group">
                 <input type="text" id="clientName" placeholder="Ваше Имя" required>
-                <input type="tel" id="clientPhone" placeholder="Ваш Телефон (+992...)" required>
-                
-                <select id="deliveryType" onchange="toggleAddress()">
-                    <option value="delivery">Доставка до двери</option>
-                    <option value="pickup">Самовывоз (бесплатно)</option>
-                </select>
-                
-                <input type="text" id="clientAddress" placeholder="Адрес доставки (Улица, Дом)">
-
-                <div class="payment-methods">
-                    <label class="pay-method">
-                        <input type="radio" name="payment" value="Alif Mobi" checked>
-                        <span><i class="fa-solid fa-wallet"></i> Alif Mobi</span>
-                    </label>
-                    <label class="pay-method">
-                        <input type="radio" name="payment" value="Наличные">
-                        <span><i class="fa-solid fa-money-bill"></i> Наличными</span>
-                    </label>
-                </div>
-
-                <button class="pay-btn" onclick="sendOrder()" id="sendBtn">Подтвердить и Заказать</button>
             </div>
+            <div class="form-group">
+                <input type="tel" id="clientPhone" placeholder="Ваш Телефон (+992...)" required>
+            </div>
+            <div class="form-group">
+                <select id="deliveryType" onchange="toggleAddress()">
+                    <option value="delivery">Доставка курьером</option>
+                    <option value="pickup">Самовывоз (Бесплатно)</option>
+                </select>
+            </div>
+            <div class="form-group" id="addressBlock">
+                <input type="text" id="clientAddress" placeholder="Адрес (Улица, Дом, Кв)">
+            </div>
+
+            <h4 class="pay-title">Способ оплаты:</h4>
+            <div class="payment-methods">
+                <label class="pay-card">
+                    <input type="radio" name="payment" value="Alif Mobi" checked>
+                    <img src="https://alif.tj/img/alif-logo.png" alt="Alif">
+                </label>
+                <label class="pay-card">
+                    <input type="radio" name="payment" value="Dushanbe City">
+                    <img src="https://dushanbecity.tj/favicon.ico" alt="DC">
+                </label>
+                <label class="pay-card">
+                    <input type="radio" name="payment" value="Наличные">
+                    <span>💵 Наличные</span>
+                </label>
+            </div>
+
+            <button class="submit-btn" id="sendBtn" onclick="sendOrder()">Подтвердить заказ</button>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2024 Супермаркет ЁВАР Clone. Все права защищены.</p>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
