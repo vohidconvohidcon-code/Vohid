@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЁВАР - Мағозаи касбӣ</title>
+    <title>ЁВАР - Мағозаи Онлайн</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,9 +12,9 @@
     <header class="header">
         <div class="header-main container">
             <div class="logo">🛒 ЁВАР</div>
-            <nav class="nav-menu">
-                <button class="nav-link" onclick="showSection('shop')">Мағоза</button>
-                <button class="nav-link" onclick="showSection('history')">Таърихи харид</button>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" onclick="showSection('shop')">Мағоза</button>
+                <button class="tab-btn" onclick="showSection('history')">Харидҳои ман</button>
             </nav>
             <div class="cart-btn" onclick="toggleCart()">
                 Сабад <span id="cart-badge" class="badge">0</span>
@@ -22,72 +22,65 @@
         </div>
     </header>
 
-    <main class="container main-content">
-        <section id="shop-section">
+    <main class="container">
+        <section id="shop-section" class="active-section">
             <div class="categories">
                 <button class="cat-btn active" onclick="filterProduct('all')">Ҳама</button>
                 <button class="cat-btn" onclick="filterProduct('milk')">Ширӣ</button>
                 <button class="cat-btn" onclick="filterProduct('water')">Нушокиҳо</button>
             </div>
-            <div class="product-grid" id="product-grid">
+            
+            <div class="product-grid">
                 <div class="product-card" data-category="milk">
                     <img src="https://vash-vibor.tj/wp-content/uploads/2021/05/moloko-saodat-25.jpg" class="product-img">
-                    <div class="product-title">Шири 'Саодат' 1л</div>
-                    <div class="product-price">12.00 смн</div>
+                    <h3>Шири Саодат 1л</h3>
+                    <p class="price">12.00 смн</p>
                     <button class="add-btn" onclick="addToCart(1, 'Шири Саодат', 12.00)">Илова кардан</button>
                 </div>
                 <div class="product-card" data-category="water">
                     <img src="https://siyoma.tj/wp-content/uploads/2020/02/1.5.png" class="product-img">
-                    <div class="product-title">Оби 'Сиёма' 1.5л</div>
-                    <div class="product-price">5.00 смн</div>
+                    <h3>Оби Сиёма 1.5л</h3>
+                    <p class="price">5.00 смн</p>
                     <button class="add-btn" onclick="addToCart(2, 'Оби Сиёма', 5.00)">Илова кардан</button>
                 </div>
             </div>
         </section>
 
         <section id="history-section" style="display: none;">
-            <h2 class="section-title">Таърихи фармоишҳои шумо</h2>
-            <div id="order-history-list">
-                <p style="text-align: center; color: #888;">Шумо то ҳол фармоиш надоред.</p>
-            </div>
+            <h2 class="section-title">Таърихи фармоишҳо</h2>
+            <div id="history-list"></div>
         </section>
     </main>
 
-    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-    <aside class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header"><h2>Сабад</h2><button class="close-btn" onclick="toggleCart()">&times;</button></div>
-        <div class="cart-items" id="cart-items"></div>
-        <div class="cart-footer">
-            <div class="cart-total"><span>Ҷамъ:</span><strong id="total-price">0.00 смн</strong></div>
-            <button class="checkout-btn" onclick="openCheckout()">Давом додан</button>
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Сабад</h2>
+            <button onclick="toggleCart()">&times;</button>
+        </div>
+        <div id="cart-items" class="cart-body"></div>
+        <div class="sidebar-footer">
+            <div class="total">Ҷамъ: <span id="total-price">0.00</span> смн</div>
+            <button class="order-btn" onclick="openCheckout()">Давом додан</button>
         </div>
     </aside>
 
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeCheckout()">&times;</span>
-            <h3>Қадами охирин</h3>
+            <span class="close" onclick="closeCheckout()">&times;</span>
+            <h2>Тасдиқи пардохт</h2>
+            <input type="text" id="custName" placeholder="Номи шумо" class="modal-input">
+            <input type="tel" id="custPhone" placeholder="Телефон" class="modal-input">
             
-            <div class="step">
-                <p><strong>1. Маълумот:</strong></p>
-                <input type="text" id="clientName" placeholder="Номи шумо" class="form-input">
-                <input type="tel" id="clientPhone" placeholder="Телефон" class="form-input">
+            <div class="payment-box">
+                <p>Пулро ба ин корт гузаронед:</p>
+                <div class="card-num">💳 9988 1122 3344 5566</div>
+                <p class="small">Alif Mobi / Humo / DC</p>
             </div>
 
-            <div class="step payment-info">
-                <p><strong>2. Пардохт:</strong></p>
-                <p style="font-size: 13px;">Пулро ба ин корт гузаронед:</p>
-                <div class="card-number">💳 9988 1122 3344 5566</div>
-                <p style="font-size: 12px; color: #666;">(Alif Mobi / DC Next / Humo Online)</p>
-            </div>
-
-            <div class="step">
-                <p><strong>3. Тасдиқ:</strong></p>
-                <label>Скриншоти чекро бор кунед:</label>
-                <input type="file" id="receiptFile" accept="image/*">
-            </div>
-
-            <button class="submit-btn" id="sendBtn" onclick="sendOrder()">Тасдиқ ва фиристодан</button>
+            <label>Скриншоти чекро бор кунед:</label>
+            <input type="file" id="receiptImg" accept="image/*">
+            <button class="final-btn" id="sendBtn" onclick="sendOrder()">Фиристодан</button>
         </div>
     </div>
 
