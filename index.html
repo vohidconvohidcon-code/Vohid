@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЁВАР - Супермаркет</title>
+    <title>ЁВАР - Мағозаи Онлайн</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -19,20 +19,17 @@
     </header>
 
     <main class="container main-content">
-        <h2 class="section-title">Маҳсулотҳои маъмул</h2>
-        <div class="product-grid" id="product-grid">
-            </div>
+        <h2 class="section-title">Маҳсулотҳои мо</h2>
+        <div class="product-grid" id="product-grid"></div>
     </main>
 
     <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <aside class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <h2>Сабад</h2>
+            <h2>Сабади шумо</h2>
             <button class="close-btn" onclick="toggleCart()">&times;</button>
         </div>
-        <div class="cart-items" id="cart-items">
-            <p class="empty-msg">Сабад холӣ аст</p>
-        </div>
+        <div class="cart-items" id="cart-items"></div>
         <div class="cart-footer">
             <div class="cart-total">
                 <span>Ҷамъ:</span>
@@ -45,18 +42,12 @@
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeCheckout()">&times;</span>
-            <div class="form-group">
-    <label style="font-size: 13px; font-weight: 600; color: #E30613;">
-        Расиди пардохтро (скриншот) бор кунед:
-    </label>
-    <input type="file" id="receiptFile" accept="image/*" style="padding: 5px;">
-</div>
-            <h2>Фармоиш</h2>
+            <h3>Тасдиқи фармоиш</h3>
             <div class="form-group">
                 <input type="text" id="clientName" placeholder="Номи шумо" required>
             </div>
             <div class="form-group">
-                <input type="number" id="clientPhone" placeholder="Телефон (масалан: 900112233)" required>
+                <input type="tel" id="clientPhone" placeholder="Телефон: 900112233" required>
             </div>
             <div class="form-group">
                 <select id="deliveryType" onchange="toggleAddress()">
@@ -65,18 +56,15 @@
                 </select>
             </div>
             <div class="form-group" id="addressBlock">
-                <input type="text" id="clientAddress" placeholder="Суроға (Кӯча, Хона, Ошёна)">
+                <input type="text" id="clientAddress" placeholder="Суроғаи пурра">
             </div>
-            <p>Тарзи пардохт:</p>
-            <div class="payment-methods">
-                <label class="pay-card">
-                    <input type="radio" name="payment" value="Alif Mobi" checked> Alif Mobi
-                </label>
-                <label class="pay-card">
-                    <input type="radio" name="payment" value="Наличные"> Нақд (Cash)
-                </label>
+            
+            <div class="receipt-section">
+                <label>Бор кардани расид (Чеки пардохт):</label>
+                <input type="file" id="receiptFile" accept="image/*">
             </div>
-            <button class="submit-btn" id="sendBtn" onclick="sendOrder()">Тасдиқи фармоиш</button>
+
+            <button class="submit-btn" id="sendBtn" onclick="sendOrder()">Фиристодани заказ</button>
         </div>
     </div>
 
