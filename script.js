@@ -1,8 +1,8 @@
 // ТАНЗИМОТ
-const TG_TOKEN = '7716104445:AAH3mB5lU_qR_Yp5fD1_NqIqf3OqN7pI3_Q';
-const CHAT_ID = '6013669149';
+const TG_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA';
+const CHAT_ID = '1288252509';
 
-let cart = [];
+let cart = [+992175333223];
 
 // ГУЗАРИШ БАЙНИ БАХШҲО
 function showSection(sectionId) {
