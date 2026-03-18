@@ -196,7 +196,7 @@ ${itemsText}
             
             // Агар Алиф бошад, ба барномаи Алиф мегузаронад
             if (payment === "Alif Mobi") {
-                window.location.href = "https://alif.tj"; // Ё ба линки пардохти худатон
+                window.location.href = "https://alif.tj/+991175333223"; // Ё ба линки пардохти худатон
             }
             
             cart = [];
