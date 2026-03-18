@@ -1,6 +1,6 @@
 // --- ТАНЗИМОТИ ТЕЛЕГРАМ ---
-const TELEGRAM_TOKEN = 'ТОКЕНИ_БОТИ_ШУМО'; 
-const CHAT_ID = 'ID_ШУМО'; 
+const TELEGRAM_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; 
+const CHAT_ID = '1288252509'; 
 
 // --- БАЗАИ МАҲСУЛОТҲО ---
 const products = [
@@ -102,48 +102,66 @@ function toggleAddress() {
     document.getElementById('addressBlock').style.display = type === 'Самовывоз' ? 'none' : 'block';
 }
 
-// ФИРИСТОДАН БА ТЕЛЕГРАМ
+// --- ТАНЗИМОТИ ТЕЛЕГРАМ ---
+const TELEGRAM_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; 
+const CHAT_ID = '1288252509'; 
+
 async function sendOrder() {
     const name = document.getElementById('clientName').value.trim();
     const phone = document.getElementById('clientPhone').value.trim();
     const type = document.getElementById('deliveryType').value;
     const addr = document.getElementById('clientAddress').value.trim();
     const pay = document.querySelector('input[name="payment"]:checked').value;
+    const fileInput = document.getElementById('receiptFile');
     const btn = document.getElementById('sendBtn');
 
-    if (!name || !phone) return alert("Ном ва телефонро пур кунед!");
-    if (TELEGRAM_TOKEN === 'ТОКЕНИ_БОТИ_ШУМО') return alert("Токенро дар скрипт нагузоштед!");
+    // Санҷиши пур кардани маълумот
+    if (!name || !phone) return alert("Лутфан ном ва телефонро нависед!");
+    if (fileInput.files.length === 0) return alert("Лутфан скриншоти расидро (чек) бор кунед!");
 
-    btn.innerText = "Интизор...";
+    btn.innerText = "Дар ҳоли фиристодан...";
     btn.disabled = true;
 
-    let text = `📦 ФАРМОИШИ НАВ (ЁВАР)\n`;
-    text += `👤 Мизоҷ: ${name}\n`;
-    text += `📞 Телефон: ${phone}\n`;
-    text += `🚚 Тарз: ${type}\n`;
-    if (type === 'Доставка') text += `📍 Суроға: ${addr || 'Навишта нашудааст'}\n`;
-    text += `💳 Пардохт: ${pay}\n`;
-    text += `------------------------\n`;
-    cart.forEach(i => text += `• ${i.name} (x${i.qty}) = ${(i.price * i.qty).toFixed(2)} смн\n`);
-    text += `------------------------\n`;
-    text += `💰 ҶАМЪ: ${document.getElementById('total-price').innerText}`;
+    // 1. Омода кардани матни фармоиш
+    let orderText = `📦 ФАРМОИШИ НАВ\n`;
+    orderText += `👤 Мизоҷ: ${name}\n`;
+    orderText += `📞 Телефон: ${phone}\n`;
+    orderText += `🚚 Намуд: ${type}\n`;
+    if (type === 'Доставка') orderText += `📍 Суроға: ${addr}\n`;
+    orderText += `💳 Пардохт: ${pay}\n`;
+    orderText += `------------------------\n`;
+    cart.forEach(i => {
+        orderText += `• ${i.name} (x${i.qty}) = ${(i.price * i.qty).toFixed(2)} смн\n`;
+    });
+    orderText += `------------------------\n`;
+    orderText += `💰 ҶАМЪ: ${document.getElementById('total-price').innerText}`;
+
+    // 2. Фиристодани Расм (Скриншот) бо матни заказ ба Telegram
+    const formData = new FormData();
+    formData.append('chat_id', CHAT_ID);
+    formData.append('photo', fileInput.files[0]);
+    formData.append('caption', orderText); // Матни заказ дар зери расм мешавад
 
     try {
-        const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+            body: formData
         });
 
-        if (res.ok) {
-            alert("✅ Фармоиш қабул шуд! Мо ба шумо занг мезанем.");
-            if (pay === "Alif Mobi") window.location.href = "https://alif.tj";
-            cart = []; updateUI(); closeCheckout();
+        if (response.ok) {
+            alert("✅ Фармоиш ва расид қабул шуд! Админ зуд тафтиш карда ба шумо занг мезанад.");
+            
+            // Тоза кардани сабад ва пӯшидани модал
+            cart = [];
+            updateUI();
+            closeCheckout();
+            fileInput.value = ""; // Тоза кардани майдони файл
         } else {
-            alert("❌ Хатогӣ ҳангоми фиристодан ба Telegram.");
+            const err = await response.json();
+            alert("❌ Хатогӣ дар Telegram: " + err.description);
         }
     } catch (e) {
-        alert("❌ Хатои шабака!");
+        alert("❌ Хатои шабака! Интернет-ро тафтиш кунед.");
     } finally {
         btn.innerText = "Тасдиқи фармоиш";
         btn.disabled = false;
