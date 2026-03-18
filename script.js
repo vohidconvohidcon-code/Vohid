@@ -1,217 +1,153 @@
-// НАСТРОЙКИ ТЕЛЕГРАМ БОТА
-const TELEGRAM_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; // Токени худро гузоред
-const CHAT_ID = '1288252509'; // ID-и худро гузоред
+// --- ТАНЗИМОТИ ТЕЛЕГРАМ ---
+const TELEGRAM_TOKEN = 'ТОКЕНИ_БОТИ_ШУМО'; 
+const CHAT_ID = 'ID_ШУМО'; 
 
-// Базаи маҳсулотҳои мағоза
+// --- БАЗАИ МАҲСУЛОТҲО ---
 const products = [
-    { id: 1, name: "Молоко 'Саодат' 2.5% 1л", price: 12.50, cat: "dairy", img: "https://vash-vibor.tj/wp-content/uploads/2021/05/moloko-saodat-25.jpg" },
-    { id: 2, name: "Творог Домашний 500г", price: 25.00, cat: "dairy", img: "https://images.unsplash.com/photo-1559598467-f8b76c8155d0?w=300" },
-    { id: 3, name: "Хлеб 'Точикистон'", price: 4.50, cat: "bakery", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300" },
-    { id: 4, name: "Булочка с джемом", price: 5.00, cat: "bakery", img: "https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?w=300" },
-    { id: 5, name: "Вода 'Сиёма' 1.5л (Газ)", price: 5.00, cat: "drinks", img: "https://siyoma.tj/wp-content/uploads/2020/02/1.5.png" },
-    { id: 6, name: "Coca-Cola 1.5л", price: 13.00, cat: "drinks", img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
-    { id: 7, name: "Бананы Эквадор (1кг)", price: 23.00, cat: "fruits", img: "https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=300" },
-    { id: 8, name: "Мясо Говядина (1кг)", price: 75.00, cat: "meat", img: "https://images.unsplash.com/photo-1603048297172-c92544798d5e?w=300" }
+    { id: 1, name: "Молоко 'Саодат' 1л", price: 12.00, img: "https://vash-vibor.tj/wp-content/uploads/2021/05/moloko-saodat-25.jpg" },
+    { id: 2, name: "Вода 'Сиёма' 1.5л", price: 5.00, img: "https://siyoma.tj/wp-content/uploads/2020/02/1.5.png" },
+    { id: 3, name: "Хлеб свежий", price: 4.00, img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300" },
+    { id: 4, name: "Coca-Cola 1.5л", price: 13.00, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" },
+    { id: 5, name: "Масло 'Олейна' 1л", price: 18.00, img: "https://re-store.tj/wp-content/uploads/2020/06/619866.png" },
+    { id: 6, name: "Рис Лазер 1кг", price: 22.00, img: "https://farovon.tj/wp-content/uploads/2020/04/lazer.jpg" }
 ];
 
 let cart = [];
 
-// Намоиши маҳсулот дар саҳифа
-function renderProducts(items) {
+// Рендери маҳсулот
+function init() {
     const grid = document.getElementById('product-grid');
-    if (items.length === 0) {
-        grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">Ничего не найдено 😔</p>`;
-        return;
-    }
-    grid.innerHTML = items.map(p => `
+    grid.innerHTML = products.map(p => `
         <div class="product-card">
-            <img src="${p.img}" class="product-img" alt="${p.name}">
-            <h3 class="product-title">${p.name}</h3>
+            <img src="${p.img}" class="product-img">
+            <div class="product-title">${p.name}</div>
             <div class="product-price">${p.price.toFixed(2)} смн</div>
-            <button class="add-btn" onclick="addToCart(${p.id})">
-                <i class="fa-solid fa-cart-plus"></i> В корзину
-            </button>
+            <button class="add-btn" onclick="addToCart(${p.id})">Илова ба сабад</button>
         </div>
     `).join('');
 }
 
-// Филтр кардани категорияҳо
-function filterProducts(cat, element) {
-    document.querySelectorAll('.cat-list li').forEach(li => li.classList.remove('active'));
-    if (element) element.classList.add('active');
-    
-    document.getElementById('category-title').innerText = element ? element.innerText : "Все товары";
-    
-    if (cat === 'all') renderProducts(products);
-    else renderProducts(products.filter(p => p.cat === cat));
-}
-
-// Ҷустуҷӯ
-function searchProducts() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(query));
-    document.getElementById('category-title').innerText = "Результаты поиска";
-    renderProducts(filtered);
-}
-
-// Илова ба сабад
+// Илова кардан
 function addToCart(id) {
     const product = products.find(p => p.id === id);
-    const existing = cart.find(i => i.id === id);
-    
-    if (existing) existing.qty += 1;
-    else cart.push({ ...product, qty: 1 });
-    
-    updateCartUI();
-    // Аниматсияи хурд ҳангоми илова
-    const badge = document.getElementById('cart-badge');
-    badge.style.transform = "scale(1.5)";
-    setTimeout(() => badge.style.transform = "scale(1)", 200);
-}
-
-// Тағйири миқдор дар сабад
-function changeQty(id, delta) {
     const item = cart.find(i => i.id === id);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
-    updateCartUI();
+    if (item) item.qty++; else cart.push({ ...product, qty: 1 });
+    updateUI();
 }
 
-// Навсозии намуди сабад
-function updateCartUI() {
+// Навсозии интерфейс
+function updateUI() {
     const list = document.getElementById('cart-items');
     const badge = document.getElementById('cart-badge');
     const totalElem = document.getElementById('total-price');
-
+    
     if (cart.length === 0) {
-        list.innerHTML = '<div style="text-align:center; padding: 40px 0; color: #888;">Корзина пуста 🛒</div>';
+        list.innerHTML = '<p style="text-align:center; color:#888; margin-top:20px;">Сабад холӣ аст</p>';
         badge.innerText = '0';
         totalElem.innerText = '0.00 смн';
         return;
     }
 
     let total = 0;
+    let count = 0;
     list.innerHTML = cart.map(item => {
         total += item.price * item.qty;
+        count += item.qty;
         return `
-        <div class="cart-item">
-            <div>
-                <div style="font-size:14px; font-weight:600;">${item.name}</div>
-                <div style="color:#E30613; font-weight:bold;">${(item.price * item.qty).toFixed(2)} смн</div>
-            </div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
-                <span>${item.qty}</span>
-                <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
-            </div>
-        </div>`;
+            <div class="cart-item">
+                <div>
+                    <div style="font-weight:600; font-size:14px;">${item.name}</div>
+                    <div style="color:#E30613;">${(item.price * item.qty).toFixed(2)} смн</div>
+                </div>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                    <span>${item.qty}</span>
+                    <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                </div>
+            </div>`;
     }).join('');
 
-    badge.innerText = cart.reduce((sum, item) => sum + item.qty, 0);
-    totalElem.innerText = `${total.toFixed(2)} смн`;
+    badge.innerText = count;
+    totalElem.innerText = total.toFixed(2) + ' смн';
 }
 
-// Кушодан/Пӯшидани сабад
+function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+    }
+    updateUI();
+}
+
+// Тирезаҳо
 function toggleCart() {
-    const sidebar = document.getElementById('cartSidebar');
-    const overlay = document.getElementById('cartOverlay');
-    if (sidebar.classList.contains('open')) {
-        sidebar.classList.remove('open');
-        overlay.style.display = 'none';
-    } else {
-        sidebar.classList.add('open');
-        overlay.style.display = 'block';
-    }
+    document.getElementById('cartSidebar').classList.toggle('open');
+    document.getElementById('cartOverlay').style.display = 
+        document.getElementById('cartSidebar').classList.contains('open') ? 'block' : 'none';
 }
 
-// Модали пардохт
 function openCheckout() {
-    if (cart.length === 0) {
-        alert("Корзина пуста! Добавьте товары.");
-        return;
-    }
-    toggleCart(); // Пӯшидани сабад
+    if (cart.length === 0) return alert("Сабад холӣ аст!");
+    toggleCart();
     document.getElementById('checkoutModal').style.display = 'flex';
 }
-function closeCheckout() { document.getElementById('checkoutModal').style.display = 'none'; }
+
+function closeCheckout() {
+    document.getElementById('checkoutModal').style.display = 'none';
+}
 
 function toggleAddress() {
     const type = document.getElementById('deliveryType').value;
-    document.getElementById('addressBlock').style.display = type === 'pickup' ? 'none' : 'block';
+    document.getElementById('addressBlock').style.display = type === 'Самовывоз' ? 'none' : 'block';
 }
 
 // ФИРИСТОДАН БА ТЕЛЕГРАМ
 async function sendOrder() {
-    const name = document.getElementById('clientName').value;
-    const phone = document.getElementById('clientPhone').value;
-    const delivery = document.getElementById('deliveryType').value;
-    const address = document.getElementById('clientAddress').value;
-    const payment = document.querySelector('input[name="payment"]:checked').value;
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const type = document.getElementById('deliveryType').value;
+    const addr = document.getElementById('clientAddress').value.trim();
+    const pay = document.querySelector('input[name="payment"]:checked').value;
     const btn = document.getElementById('sendBtn');
 
-    if (!name || !phone) {
-        alert("Заполните Имя и Телефон!");
-        return;
-    }
-    
-    if(TELEGRAM_TOKEN === 'ТОКЕНИ_ШУМО') {
-        alert("ОШИБКА: Вы не ввели токен Telegram в файле script.js!");
-        return;
-    }
+    if (!name || !phone) return alert("Ном ва телефонро пур кунед!");
+    if (TELEGRAM_TOKEN === 'ТОКЕНИ_БОТИ_ШУМО') return alert("Токенро дар скрипт нагузоштед!");
 
-    btn.innerText = "Отправка...";
+    btn.innerText = "Интизор...";
     btn.disabled = true;
 
-    let itemsText = cart.map(i => `🔸 ${i.name} (x${i.qty}) - ${i.price * i.qty} смн`).join('\n');
-    let total = document.getElementById('total-price').innerText;
-
-    const message = `
-🛒 **НОВЫЙ ЗАКАЗ (ЁВАР Clone)**
-👤 Клиент: ${name}
-📞 Телефон: ${phone}
-🚚 Тип: ${delivery === 'pickup' ? 'Самовывоз' : 'Доставка'}
-📍 Адрес: ${address || '-'}
-💳 Оплата: ${payment}
-
-📦 **Товары:**
-${itemsText}
-
-💰 **К оплате:** ${total}
-    `;
+    let text = `📦 ФАРМОИШИ НАВ (ЁВАР)\n`;
+    text += `👤 Мизоҷ: ${name}\n`;
+    text += `📞 Телефон: ${phone}\n`;
+    text += `🚚 Тарз: ${type}\n`;
+    if (type === 'Доставка') text += `📍 Суроға: ${addr || 'Навишта нашудааст'}\n`;
+    text += `💳 Пардохт: ${pay}\n`;
+    text += `------------------------\n`;
+    cart.forEach(i => text += `• ${i.name} (x${i.qty}) = ${(i.price * i.qty).toFixed(2)} смн\n`);
+    text += `------------------------\n`;
+    text += `💰 ҶАМЪ: ${document.getElementById('total-price').innerText}`;
 
     try {
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown'
-            })
+            body: JSON.stringify({ chat_id: CHAT_ID, text: text })
         });
 
-        if (response.ok) {
-            alert("✅ Заказ успешно оформлен! Ожидайте звонка.");
-            
-            // Агар Алиф бошад, ба барномаи Алиф мегузаронад
-            if (payment === "Alif Mobi") {
-                window.location.href = "https://alif.tj/+991175333223"; // Ё ба линки пардохти худатон
-            }
-            
-            cart = [];
-            updateCartUI();
-            closeCheckout();
+        if (res.ok) {
+            alert("✅ Фармоиш қабул шуд! Мо ба шумо занг мезанем.");
+            if (pay === "Alif Mobi") window.location.href = "https://alif.tj";
+            cart = []; updateUI(); closeCheckout();
         } else {
-            alert("❌ Ошибка при отправке в Telegram.");
+            alert("❌ Хатогӣ ҳангоми фиристодан ба Telegram.");
         }
     } catch (e) {
-        alert("❌ Проверьте подключение к интернету!");
+        alert("❌ Хатои шабака!");
     } finally {
-        btn.innerText = "Подтвердить заказ";
+        btn.innerText = "Тасдиқи фармоиш";
         btn.disabled = false;
     }
 }
 
-// Оғози кор
-window.onload = () => { renderProducts(products); };
+window.onload = init;
