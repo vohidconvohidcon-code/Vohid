@@ -138,6 +138,42 @@ async function updateOrderStatus(id, status) {
     loadAdminOrders();
 }
 
+async function addProduct() {
+    const name = document.getElementById('p-name').value;
+    const price = document.getElementById('p-price').value;
+    const img = document.getElementById('p-img').value;
+    const cat = document.getElementById('p-cat').value;
+
+    if (!name || !price) return alert("Пур кунед!");
+
+    // МУҲИМ: id-ро дар инҷо нанависед!
+    const productData = {
+        name: name,
+        price: parseFloat(price),
+        img: img,
+        cat: cat
+    };
+
+    const res = await fetch(`${URL}/rest/v1/products`, {
+        method: 'POST',
+        headers: { 
+            'apikey': KEY, 
+            'Authorization': `Bearer ${KEY}`, 
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal' 
+        },
+        body: JSON.stringify(productData)
+    });
+
+    if (res.ok) {
+        alert("Маҳсулот илова шуд!");
+        loadProducts(); // Навсозии рӯйхат
+        closeModals();
+    } else {
+        alert("Хатогӣ!");
+    }
+}
+
 function switchTab(tab) {
     document.getElementById('tab-orders').style.display = tab === 'orders' ? 'block' : 'none';
     document.getElementById('tab-add').style.display = tab === 'add' ? 'block' : 'none';
