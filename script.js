@@ -1,9 +1,9 @@
 const SUPABASE_URL = 'https://yjoomrfdkmrlspakcikb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc2MiOiJzdXBhYmFzZSIsInJlZ2lvbiI6InVzLWVhc3QtMSIsInByb2plY3RfcmVmIjoieWpvb21yZmRrbXJsc3Bha2Npa2IifQ.BhYmFzZSlzInJlZ2iI6Inlqb21ycmRrbXJsc3Bha2Npa2B9tcm';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlqb29tcmZka21ybHNwYWtjaWtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MjUyODIsImV4cCI6MjA4OTQwMTI4Mn0.QnWDad_ES313_5r-PIpCkqNkHpMN0jxCdOn5dOkXESE';
 
 // ⚠️ ДИҚҚАТ: Токени боти худро дар инҷо гузоред!
-const TG_TOKEN = 'ТОКЕНИ_БОТИ_ШУМО'; 
-const CHAT_ID = '6013669149'; 
+const TG_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; 
+const CHAT_ID = '1288252509'; 
 
 let products = [];
 let cart = [];
