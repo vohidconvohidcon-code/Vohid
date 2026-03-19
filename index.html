@@ -49,6 +49,41 @@
         </div>
     </div>
 
+    <div class="cart-float" onclick="openCheckout()">
+    🛒 Сабад: <span id="cart-count">0</span>
+</div>
+
+<div id="checkout-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="this.parentElement.parentElement.style.display='none'">&times;</span>
+        <h3>Анҷоми харид</h3>
+        <p id="order-summary"></p>
+        
+        <input type="text" id="cust-name" class="admin-input" placeholder="Номи шумо">
+        <input type="text" id="cust-phone" class="admin-input" placeholder="Телефон">
+        <input type="text" id="cust-addr" class="admin-input" placeholder="Суроғаи пурра">
+        
+        <select id="delivery-type" class="admin-input">
+            <option value="Доставка">Доставка</option>
+            <option value="Худам мегирам">Худам мегирам</option>
+        </select>
+
+        <select id="payment-method" class="admin-input" onchange="toggleWalletInfo(this.value)">
+            <option value="Нақд">Нақд (ҳангоми гирифтан)</option>
+            <option value="Бонк">Корти Бонкӣ (Алиф/Душанбе Сити)</option>
+        </select>
+
+        <div id="wallet-info" style="display:none; background:#e8f4fd; padding:10px; border-radius:10px; margin:10px 0;">
+            <p>Рақами ҳамён: <b id="wallet-num">900001122</b></p>
+            <button onclick="copyWallet()" style="background:#3498db; color:white; border:none; padding:5px; border-radius:5px;">📋 Нусхабардорӣ</button>
+            <p style="font-size:12px; margin-top:5px;">Чекро скриншот карда, ссылкаашро дар поён гузоред:</p>
+            <input type="text" id="receipt-url" class="admin-input" placeholder="Ссылка ба скриншот (ё номи чек)">
+        </div>
+
+        <button onclick="submitOrder()" class="btn-success">ФИРИСТОДАН</button>
+    </div>
+</div>
+
     <script src="script.js"></script>
 </body>
 </html>
