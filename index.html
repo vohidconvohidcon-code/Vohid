@@ -3,63 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дӯкони Онлайн</title>
+    <title>Ёвар - Мағозаи Онлайн</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
-        <div class="logo" onclick="openAdmin()">🛍️ Дӯкони Ман</div>
-        <div class="cart-btn" onclick="sendOrder()">
-            🛒 Сабад: <span id="cart-count" class="cart-badge">0</span>
+        <div class="logo" onclick="openAdmin()">🛒 ЁВАР</div>
+        <div class="cart-box" onclick="sendOrder()">
+            Сабад: <span id="cart-count">0</span>
         </div>
     </header>
 
-    <nav class="categories">
+    <nav class="category-nav">
         <button onclick="filterCategory('Ҳама')">Ҳама</button>
         <button onclick="filterCategory('Ширӣ')">Ширӣ</button>
         <button onclick="filterCategory('Нӯшокиҳо')">Нӯшокиҳо</button>
         <button onclick="filterCategory('Хӯрокворӣ')">Хӯрокворӣ</button>
     </nav>
 
-    <main>
-        <div id="main-grid" class="grid-container">
-            </div>
-    </main>
+    <main id="main-grid" class="products-grid">
+        </main>
 
     <div id="admin-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeAdmin()">&times;</span>
-            <h2>Панели Идоракунӣ</h2>
-            
+            <span class="close" onclick="closeAdmin()">&times;</span>
             <div id="admin-auth">
-                <p>Барои даромад рамзро ворид кунед:</p>
-                <input type="password" id="admin-pass" class="admin-input" placeholder="Парол (1234)">
-                <button class="btn-primary" onclick="checkAdminPass()">Даромад</button>
+                <h3>Даромад ба Админ</h3>
+                <input type="password" id="admin-pass" placeholder="Рамз (1234)">
+                <button onclick="checkAdminPass()">Даромад</button>
             </div>
-
             <div id="admin-content" style="display:none;">
-                <div class="admin-form">
-                    <h3>Илова / Ислоҳи Маҳсулот</h3>
-                    <input type="text" id="p-name" class="admin-input" placeholder="Номи маҳсулот">
-                    <input type="number" id="p-price" class="admin-input" placeholder="Нарх (смн)">
-                    <input type="text" id="p-img" class="admin-input" placeholder="Ссылкаи расм">
-                    <select id="p-cat" class="admin-input">
-                        <option value="Ширӣ">Ширӣ</option>
-                        <option value="Нӯшокиҳо">Нӯшокиҳо</option>
-                        <option value="Хӯрокворӣ">Хӯрокворӣ</option>
-                        <option value="Умумӣ">Дигар (Умумӣ)</option>
-                    </select>
-                    <button id="save-btn" class="btn-success" onclick="saveProduct()">Илова кардан</button>
-                </div>
-
+                <h3>Илова / Ислоҳи Маҳсулот</h3>
+                <input type="text" id="p-name" placeholder="Номи маҳсулот">
+                <input type="number" id="p-price" placeholder="Нарх">
+                <input type="text" id="p-img" placeholder="Ссылкаи расм">
+                <select id="p-cat">
+                    <option value="Ширӣ">Ширӣ</option>
+                    <option value="Нӯшокиҳо">Нӯшокиҳо</option>
+                    <option value="Хӯрокворӣ">Хӯрокворӣ</option>
+                </select>
+                <button id="save-btn" onclick="saveProduct()">Сабт кардан</button>
                 <hr>
-                
-                <div class="admin-list-container">
-                    <h3>Рӯйхати маҳсулот дар база:</h3>
-                    <div id="admin-product-list">
-                        </div>
-                </div>
+                <div id="admin-product-list"></div>
             </div>
         </div>
     </div>
