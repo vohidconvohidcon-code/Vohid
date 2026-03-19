@@ -23,24 +23,93 @@ body {
     color: #333;
 }
 
-* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-body { margin: 0; background: #f4f6f9; color: #333; }
-header { background: #1a252f; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 22px; font-weight: bold; cursor: pointer; }
-.cats-bar { background: white; padding: 10px; display: flex; gap: 10px; overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.cats-bar button { border: none; padding: 8px 15px; border-radius: 20px; background: #e0e0e0; cursor: pointer; white-space: nowrap; }
-.main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; }
-.card { background: white; border-radius: 12px; padding: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.card img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto; }
-.modal-content { background: white; width: 95%; max-width: 450px; margin: 30px auto; padding: 25px; border-radius: 15px; }
-input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; }
-.bank-info { background: #e3f2fd; border: 2px dashed #2196f3; padding: 15px; border-radius: 10px; margin: 10px 0; }
-.btn-confirm, .btn-add { background: #27ae60; color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-.order-card { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
-.status-Интизорӣ { color: #f39c12; font-weight: bold; }
-.status-Тасдиқ { color: #2ecc71; font-weight: bold; }
-.status-Рад { color: #e74c3c; font-weight: bold; }
+:root {
+    --primary: #27ae60;
+    --dark: #2c3e50;
+    --light: #f4f7f6;
+}
+
+body {
+    background-color: var(--light);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+}
+
+header {
+    background: white;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 30px 5%;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.card h4 { margin: 10px 0; color: var(--dark); }
+
+.card .price {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+
+.btn-buy {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+}
+
+/* Стили модал (Панели Админ) */
+.modal-content {
+    border-radius: 20px !important;
+    padding: 30px !important;
+    border: none !important;
+}
+
+input, select {
+    border: 1px solid #ddd !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    margin-bottom: 15px !important;
+}
 
 /* ҚИСМИ БОЛОӢ (HEADER) */
 header {
