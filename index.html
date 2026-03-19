@@ -3,165 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЁВАР - Мағозаи Онлайн</title>
+    <title>Дӯкони Онлайн</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <button class="nav-btn" onclick="openAdmin()">Админ</button>
-
-<div id="admin-modal" class="modal">
-    <div class="modal-box admin-box">
-        <span class="close-modal" onclick="closeAdmin()">&times;</span>
-        <h2>Панели Админ</h2>
-        <div id="admin-auth">
-            <input type="password" id="admin-pass" placeholder="Паролро ворид кунед" class="modal-input">
-            <button class="buy-btn" onclick="checkAdminPass()">Ворид шуд</button>
-        </div>
-        
-        <div class="admin-modal-content">
-    <span class="close" onclick="closeAdmin()">&times;</span>
-    <h2>Панели Админ</h2>
-    
-    <div id="admin-auth">
-        <input type="password" id="admin-pass" placeholder="Парол">
-        <button onclick="checkAdminPass()">Даромад</button>
-    </div>
-
-    <div id="admin-content" style="display:none;">
-        <h3>Илова/Ислоҳи маҳсулот</h3>
-        <input type="text" id="p-name" class="admin-input" placeholder="Номи маҳсулот">
-        <input type="number" id="p-price" class="admin-input" placeholder="Нарх">
-        <input type="text" id="p-img" class="admin-input" placeholder="Ссылкаи расм">
-        <select id="p-cat" class="admin-input">
-            <option value="Ширӣ">Ширӣ</option>
-            <option value="Нӯшокиҳо">Нӯшокиҳо</option>
-            <option value="Хӯрокворӣ">Хӯрокворӣ</option>
-        </select>
-        <button id="save-btn" onclick="saveProduct()">Илова кардан</button>
-
-        <hr>
-        <h3>Идоракунии маҳсулот</h3>
-        <div id="admin-product-list" class="admin-product-list">
-            </div>
-    </div>
-</div>
-    </div>
-</div>
-
-    <header class="header">
-        <div class="header-container container">
-            <div class="logo" onclick="showSection('shop')">🛒 ЁВАР</div>
-            <nav class="main-nav">
-                <button class="nav-btn active" id="btn-shop" onclick="showSection('shop')">Мағоза</button>
-                <button class="nav-btn" id="btn-history" onclick="showSection('history')">Харидҳои ман</button>
-            </nav>
-            <div class="cart-control" onclick="toggleCart()">
-                <i class="fas fa-shopping-basket"></i>
-                <span id="cart-badge">0</span>
-            </div>
+    <header>
+        <div class="logo" onclick="openAdmin()">🛍️ Дӯкони Ман</div>
+        <div class="cart-btn" onclick="sendOrder()">
+            🛒 Сабад: <span id="cart-count" class="cart-badge">0</span>
         </div>
     </header>
 
-    <main class="container">
-        <section id="shop-section" class="content-section active">
-            <div class="category-bar">
-                <button class="cat-chip active" onclick="filterItems('all', event)">Ҳама</button>
-                <button class="cat-chip" onclick="filterItems('milk', event)">Ширӣ</button>
-                <button class="cat-chip" onclick="filterItems('drinks', event)">Нӯшокиҳо</button>
-                <button class="cat-chip" onclick="filterItems('food', event)">Хӯрокворӣ</button>
-            </div>
+    <nav class="categories">
+        <button onclick="filterCategory('Ҳама')">Ҳама</button>
+        <button onclick="filterCategory('Ширӣ')">Ширӣ</button>
+        <button onclick="filterCategory('Нӯшокиҳо')">Нӯшокиҳо</button>
+        <button onclick="filterCategory('Хӯрокворӣ')">Хӯрокворӣ</button>
+    </nav>
 
-            <div class="product-grid" id="main-grid">
-                <div class="product-item" data-cat="milk">
-                    <div class="img-box"><img src="https://vash-vibor.tj/wp-content/uploads/2021/05/moloko-saodat-25.jpg" alt="Milk"></div>
-                    <div class="product-info">
-                        <h3>Шири Саодат 1л</h3>
-                        <p class="item-price">12.00 смн</p>
-                        <button class="buy-btn" onclick="addToCart(1, 'Шири Саодат 1л', 12.00)">Илова кардан</button>
-                    </div>
-                </div>
-                <div class="product-item" data-cat="drinks">
-                    <div class="img-box"><img src="https://siyoma.tj/wp-content/uploads/2020/02/1.5.png" alt="Water"></div>
-                    <div class="product-info">
-                        <h3>Оби Сиёма 1.5л</h3>
-                        <p class="item-price">5.00 смн</p>
-                        <button class="buy-btn" onclick="addToCart(2, 'Оби Сиёма 1.5л', 5.00)">Илова кардан</button>
-                    </div>
-                </div>
-                <div class="product-item" data-cat="drinks">
-                    <div class="img-box"><img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300" alt="Cola"></div>
-                    <div class="product-info">
-                        <h3>Coca-Cola 1.5л</h3>
-                        <p class="item-price">13.00 смн</p>
-                        <button class="buy-btn" onclick="addToCart(3, 'Coca-Cola 1.5л', 13.00)">Илова кардан</button>
-                    </div>
-                </div>
-                <div class="product-item" data-cat="food">
-                    <div class="img-box"><img src="https://farovon.tj/wp-content/uploads/2020/04/lazer.jpg" alt="Rice"></div>
-                    <div class="product-info">
-                        <h3>Биринҷи Лазер 1кг</h3>
-                        <p class="item-price">22.00 смн</p>
-                        <button class="buy-btn" onclick="addToCart(4, 'Биринҷи Лазер 1кг', 22.00)">Илова кардан</button>
-                    </div>
-                </div>
+    <main>
+        <div id="main-grid" class="grid-container">
             </div>
-        </section>
-
-        <section id="history-section" class="content-section">
-            <h2 class="page-title">Таърихи фармоишҳо</h2>
-            <div id="history-container">
-                </div>
-        </section>
     </main>
 
-    <div id="cart-overlay" class="overlay" onclick="toggleCart()"></div>
-    <aside id="cart-sidebar" class="sidebar">
-        <div class="sidebar-top">
-            <h2>Сабад</h2>
-            <button class="close-sidebar" onclick="toggleCart()">&times;</button>
-        </div>
-        <div id="cart-content" class="cart-list">
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAdmin()">&times;</span>
+            <h2>Панели Идоракунӣ</h2>
+            
+            <div id="admin-auth">
+                <p>Барои даромад рамзро ворид кунед:</p>
+                <input type="password" id="admin-pass" class="admin-input" placeholder="Парол (1234)">
+                <button class="btn-primary" onclick="checkAdminPass()">Даромад</button>
             </div>
-        <div class="sidebar-bottom">
-            <div class="total-row">
-                <span>Ҷамъ:</span>
-                <span id="grand-total">0.00 смн</span>
+
+            <div id="admin-content" style="display:none;">
+                <div class="admin-form">
+                    <h3>Илова / Ислоҳи Маҳсулот</h3>
+                    <input type="text" id="p-name" class="admin-input" placeholder="Номи маҳсулот">
+                    <input type="number" id="p-price" class="admin-input" placeholder="Нарх (смн)">
+                    <input type="text" id="p-img" class="admin-input" placeholder="Ссылкаи расм">
+                    <select id="p-cat" class="admin-input">
+                        <option value="Ширӣ">Ширӣ</option>
+                        <option value="Нӯшокиҳо">Нӯшокиҳо</option>
+                        <option value="Хӯрокворӣ">Хӯрокворӣ</option>
+                        <option value="Умумӣ">Дигар (Умумӣ)</option>
+                    </select>
+                    <button id="save-btn" class="btn-success" onclick="saveProduct()">Илова кардан</button>
+                </div>
+
+                <hr>
+                
+                <div class="admin-list-container">
+                    <h3>Рӯйхати маҳсулот дар база:</h3>
+                    <div id="admin-product-list">
+                        </div>
+                </div>
             </div>
-            <button class="checkout-now" onclick="goToPayment()">Давом додан</button>
         </div>
-    </aside>
-
-   <div id="pay-modal" class="modal">
-    <div class="modal-box">
-        <span class="close-modal" onclick="closePayModal()">&times;</span>
-        <h2 style="color: #E30613;">Тасдиқи фармоиш</h2>
-        
-        <div class="input-group">
-            <input type="text" id="user-name" placeholder="Номи шумо" required>
-        </div>
-        <div class="input-group">
-            <input type="tel" id="user-phone" placeholder="900 00 00 00" required>
-        </div>
-
-        <div class="payment-details" style="background: #fff5f5; padding: 15px; border-radius: 12px; border: 1px solid #ffcccc;">
-            <p style="margin-bottom: 5px; font-weight: 600;">Маблағро ба ин рақам гузаронед:</p>
-            <div class="copy-box" onclick="copyNumber('+992175333223')" title="Барои нусхабардорӣ пахш кунед">
-                <span id="p-number">175 333 223</span>
-                <i class="fas fa-copy" style="margin-left: 10px; color: #E30613;"></i>
-            </div>
-            <p style="font-size: 11px; color: #777; margin-top: 5px;">(Алиф / Душанбе Сити / Ҳумо / Эсхата)</p>
-        </div>
-
-        <div class="upload-area" style="margin-top: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-size: 13px;">Скриншоти чекро бор кунед:</label>
-            <input type="file" id="receipt-input" accept="image/*" style="font-size: 12px;">
-        </div>
-
-        <button id="finish-order-btn" class="send-order-btn" onclick="submitFinalOrder()">Тасдиқ ва Фиристодан</button>
     </div>
-</div>
 
     <script src="script.js"></script>
 </body>
