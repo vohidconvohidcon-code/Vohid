@@ -20,23 +20,33 @@
             <button class="buy-btn" onclick="checkAdminPass()">Ворид шуд</button>
         </div>
         
-        <div id="admin-content" style="display:none;">
-            <h3>Иловаи маҳсулот</h3>
-            <input type="text" id="p-name" placeholder="Номи маҳсулот" class="modal-input">
-            <input type="text" id="p-img" placeholder="Ссылкаи расм (URL)" class="modal-input">
-            <input type="number" id="p-price" placeholder="Нарх" class="modal-input">
-            <select id="p-cat" class="modal-input">
-                <option value="milk">Ширӣ</option>
-                <option value="drinks">Нӯшокиҳо</option>
-                <option value="food">Хӯрокворӣ</option>
-            </select>
-            <label><input type="checkbox" id="p-sale"> Акция (Тахфиф)?</label>
-            <button class="send-order-btn" onclick="addNewProduct()">Илова кардан</button>
-            
-            <hr>
-            <h3>Идоракунӣ</h3>
-            <div id="admin-product-list"></div>
-        </div>
+        <div class="admin-modal-content">
+    <span class="close" onclick="closeAdmin()">&times;</span>
+    <h2>Панели Админ</h2>
+    
+    <div id="admin-auth">
+        <input type="password" id="admin-pass" placeholder="Парол">
+        <button onclick="checkAdminPass()">Даромад</button>
+    </div>
+
+    <div id="admin-content" style="display:none;">
+        <h3>Илова/Ислоҳи маҳсулот</h3>
+        <input type="text" id="p-name" class="admin-input" placeholder="Номи маҳсулот">
+        <input type="number" id="p-price" class="admin-input" placeholder="Нарх">
+        <input type="text" id="p-img" class="admin-input" placeholder="Ссылкаи расм">
+        <select id="p-cat" class="admin-input">
+            <option value="Ширӣ">Ширӣ</option>
+            <option value="Нӯшокиҳо">Нӯшокиҳо</option>
+            <option value="Хӯрокворӣ">Хӯрокворӣ</option>
+        </select>
+        <button id="save-btn" onclick="saveProduct()">Илова кардан</button>
+
+        <hr>
+        <h3>Идоракунии маҳсулот</h3>
+        <div id="admin-product-list" class="admin-product-list">
+            </div>
+    </div>
+</div>
     </div>
 </div>
 
