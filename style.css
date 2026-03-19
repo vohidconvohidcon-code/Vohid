@@ -1,306 +1,208 @@
-:root {
-    --main-red: #E30613;
-    --bg: #f7f8fa;
-    --text: #2d3436;
-    --white: #ffffff;
+/* ТАНЗИМОТИ УМУМӢ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    margin: 0;
-    line-height: 1.5;
+    background-color: #f4f7f6;
+    color: #333;
 }
 
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* Header */
-.header {
-    background: var(--white);
-    padding: 15px 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-container {
+/* ҚИСМИ БОЛОӢ (HEADER) */
+header {
+    background: #ffffff;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--main-red);
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
     cursor: pointer;
 }
 
-.nav-btn {
-    background: none;
-    border: none;
-    padding: 10px 15px;
-    font-weight: 600;
-    cursor: pointer;
-    color: #636e72;
-}
-
-.nav-btn.active {
-    color: var(--main-red);
-    border-bottom: 2px solid var(--main-red);
-}
-
-.cart-control {
-    position: relative;
-    font-size: 22px;
-    cursor: pointer;
-    color: var(--text);
-}
-
-#cart-badge {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: var(--main-red);
+.cart-btn {
+    background: #3498db;
     color: white;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 50%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
-/* Categories */
-.category-bar {
+.cart-btn:hover { background: #2980b9; }
+
+.cart-badge {
+    background: #e74c3c;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+/* КАТЕГОРИЯҲО */
+.categories {
     display: flex;
     gap: 10px;
-    margin: 25px 0;
+    padding: 20px;
     overflow-x: auto;
+    background: white;
+    margin-bottom: 20px;
 }
 
-.cat-chip {
-    padding: 8px 20px;
-    border-radius: 25px;
-    border: 1px solid #ddd;
-    background: white;
+.categories button {
+    background: #ecf0f1;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
     cursor: pointer;
     white-space: nowrap;
+    font-weight: 500;
+    transition: 0.3s;
 }
 
-.cat-chip.active {
-    background: var(--main-red);
+.categories button:hover {
+    background: #2ecc71;
     color: white;
-    border-color: var(--main-red);
 }
 
-/* Grid */
-.product-grid {
+/* МАЙДОНИ МАҲСУЛОТ (ГРИД) */
+.grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+    padding: 0 20px 20px 20px;
 }
 
-.product-item {
-    background: var(--white);
+.product-card {
+    background: white;
     border-radius: 15px;
-    overflow: hidden;
-    transition: transform 0.3s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-}
-
-.product-item:hover { transform: translateY(-5px); }
-
-.img-box {
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 10px;
-    background: #fdfdfd;
-}
-
-.img-box img { max-height: 100%; max-width: 100%; object-fit: contain; }
-
-.product-info { padding: 15px; text-align: center; }
-.product-info h3 { font-size: 16px; margin: 10px 0; height: 40px; }
-.item-price { color: var(--main-red); font-weight: 700; font-size: 18px; margin-bottom: 15px; }
-
-.buy-btn {
-    width: 100%;
-    padding: 10px;
-    background: var(--text);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* Sidebar */
-.sidebar {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 350px;
-    height: 100%;
-    background: white;
-    z-index: 2000;
-    transition: 0.4s;
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar.active { right: 0; }
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    z-index: 1500;
-}
-
-.sidebar-top { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-.cart-list { flex: 1; padding: 20px; overflow-y: auto; }
-.sidebar-bottom { padding: 20px; border-top: 1px solid #eee; }
-.total-row { display: flex; justify-content: space-between; font-size: 20px; font-weight: 800; margin-bottom: 15px; }
-.checkout-now { width: 100%; padding: 15px; background: var(--main-red); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
-
-/* Modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-}
-
-.modal-box {
-    background: white;
-    width: 90%;
-    max-width: 420px;
-    padding: 30px;
-    border-radius: 20px;
-    position: relative;
-}
-
-.copy-box {
-    background: #ffffff;
-    border: 2px dashed #E30613;
-    padding: 12px;
-    border-radius: 10px;
     text-align: center;
-    font-size: 20px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: 0.2s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #2d3436;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    position: relative;
+    transition: transform 0.2s;
 }
 
-.copy-box:active {
-    transform: scale(0.95);
-    background: #ffebeb;
+.product-card:hover {
+    transform: translateY(-5px);
 }
 
-.copy-box:hover {
-    background: #fffafa;
-}
-
-.sale-badge {
+.badge {
     position: absolute;
     top: 10px;
     left: 10px;
     background: #f1c40f;
-    color: #000;
-    padding: 3px 10px;
-    font-size: 10px;
-    font-weight: 900;
-    border-radius: 5px;
-    z-index: 10;
+    color: #333;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: bold;
 }
 
-.admin-box {
-    max-width: 500px !important;
+.product-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.product-card h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.price {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-card button {
+    width: 100%;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.product-card button:hover { background: #27ae60; }
+
+/* ПАНЕЛИ АДМИН (МОДАЛ) */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 15px;
+    position: relative;
     max-height: 80vh;
     overflow-y: auto;
 }
 
-/* Дизайни кортҳои маҳсулот */
-.product-card {
-    background: white;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: 0.3s;
-    position: relative;
-}
-.product-card:hover { transform: translateY(-5px); }
-.badge {
+.close-btn {
     position: absolute;
-    top: 10px; left: 10px;
-    background: #27ae60; color: white;
-    padding: 4px 10px; border-radius: 20px; font-size: 12px;
+    top: 10px; right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #7f8c8d;
 }
 
-/* Панели Админ */
+.admin-input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    width: 100%; padding: 10px; border: none; border-radius: 8px;
+    background: #3498db; color: white; cursor: pointer; font-weight: bold;
+}
+
+.btn-success {
+    width: 100%; padding: 10px; border: none; border-radius: 8px;
+    background: #2ecc71; color: white; cursor: pointer; font-weight: bold; margin-top: 10px;
+}
+
+.admin-list-container {
+    margin-top: 15px;
+}
+
 .admin-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #f8f9fa;
     padding: 10px;
-    border-bottom: 1px solid #eee;
-    background: #f9f9f9;
-    margin-bottom: 5px;
     border-radius: 8px;
-}
-.edit-btn { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 5px; }
-.del-btn { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-left: 5px; }
-
-/* Формаи зебо */
-.admin-input {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    outline: none;
-}
-#save-btn {
-    width: 100%;
-    padding: 15px;
-    background: #2ecc71;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
+    margin-bottom: 8px;
+    border: 1px solid #eee;
 }
 
-hr { margin: 20px 0; border: 0; border-top: 1px solid #eee; }
-
-.modal-box h2 { margin-bottom: 20px; text-align: center; }
-.input-group input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; box-sizing: border-box; }
-.card-display { background: #f1f2f6; padding: 15px; border-radius: 10px; text-align: center; font-weight: 800; font-size: 18px; margin: 10px 0; border: 1px dashed #2d3436; }
-.bank-list { text-align: center; font-size: 12px; color: #636e72; }
-.upload-area { margin: 20px 0; }
-.send-order-btn { width: 100%; padding: 15px; background: #2ed573; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
-
-/* History Section */
-.content-section { display: none; padding-top: 20px; }
-.content-section.active { display: block; }
-.history-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #f1c40f; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.status-tag { display: inline-block; padding: 3px 10px; background: #fff8e1; color: #f39c12; border-radius: 5px; font-size: 12px; font-weight: bold; }
+.btn-edit { background: #f39c12; border: none; padding: 5px 10px; border-radius: 5px; color: white; cursor: pointer;}
+.btn-del { background: #e74c3c; border: none; padding: 5px 10px; border-radius: 5px; color: white; cursor: pointer;}
