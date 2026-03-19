@@ -5,103 +5,129 @@ const TG_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA';
 const CHAT_ID = '1288252509';
 
 let products = [];
-let cart = [];
+let currentEditId = null;
 
-// 1. Боркунии маҳсулот
+// 1. БОРКУНИИ МАҲСУЛОТ ВА ДИЗАЙНИ ГРИД
 async function loadProducts() {
     const grid = document.getElementById('main-grid');
     if (!grid) return;
-    grid.innerHTML = "⏳ Дар ҳоли боркунӣ...";
+    grid.innerHTML = "<div class='loader'>⏳ Дар ҳоли боркунӣ...</div>";
 
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=id.desc`, {
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
-        products = await response.json();
-        
-        if (products.length === 0) {
-            grid.innerHTML = "<p style='grid-column:1/-1; text-align:center;'>Маҳсулот нест. Аз панели Админ илова кунед.</p>";
-        } else {
-            renderProducts(products);
-        }
+        products = await res.json();
+        renderProducts();
+        renderAdminList(); // Намоиши рӯйхат барои идоракунӣ
     } catch (e) {
-        grid.innerHTML = "❌ Хатои пайвастшавӣ!";
+        grid.innerHTML = "❌ Хатои пайвастшавӣ";
     }
 }
 
-function renderProducts(data) {
+function renderProducts() {
     const grid = document.getElementById('main-grid');
-    grid.innerHTML = data.map(p => `
-        <div class="product-item">
-            <img src="${p.img || 'https://via.placeholder.com/150'}" style="width:100%; border-radius:10px;">
-            <div class="product-info">
+    grid.innerHTML = products.map(p => `
+        <div class="product-card">
+            <div class="badge">${p.cat}</div>
+            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/150'">
+            <div class="info">
                 <h3>${p.name}</h3>
-                <p class="item-price">${p.price} смн</p>
-                <button class="buy-btn" onclick="addToCart(${p.id}, '${p.name}', ${p.price})">Илова кардан</button>
+                <p class="price">${p.price} <span>смн</span></p>
+                <button onclick="addToCart(${p.id})">🛒 Харидан</button>
             </div>
         </div>
     `).join('');
 }
 
-// 2. Иловаи маҳсулоти нав
-async function addNewProduct() {
-    const name = document.getElementById('p-name').value;
-    const price = document.getElementById('p-price').value;
-    const img = document.getElementById('p-img').value;
-    const cat = document.getElementById('p-cat').value;
+// 2. ИДОРАКУНИИ МАҲСУЛОТ (EDIT / DELETE)
+function renderAdminList() {
+    const list = document.getElementById('admin-product-list');
+    if (!list) return;
+    list.innerHTML = products.map(p => `
+        <div class="admin-item">
+            <span>${p.name} - ${p.price}смн</span>
+            <div>
+                <button class="edit-btn" onclick="prepareEdit(${p.id})">✏️</button>
+                <button class="del-btn" onclick="deleteProduct(${p.id})">🗑️</button>
+            </div>
+        </div>
+    `).join('');
+}
 
-    if (!name || !price || !img) return alert("Лутфан ҳамаро пур кунед!");
+// Омодагӣ барои ислоҳ
+function prepareEdit(id) {
+    const p = products.find(item => item.id === id);
+    currentEditId = id;
+    document.getElementById('p-name').value = p.name;
+    document.getElementById('p-price').value = p.price;
+    document.getElementById('p-img').value = p.img;
+    document.getElementById('p-cat').value = p.cat;
+    document.getElementById('save-btn').innerText = "Захираи тағйирот";
+}
 
-    // МУҲИМ: Мо ID-ро намефиристем! База худаш онро месозад.
-    const productData = { name, price: parseFloat(price), img, cat };
+// САБТ (ҲАМ НАВ ВА ҲАМ ИСЛОҲ)
+async function saveProduct() {
+    const data = {
+        name: document.getElementById('p-name').value,
+        price: parseFloat(document.getElementById('p-price').value),
+        img: document.getElementById('p-img').value,
+        cat: document.getElementById('p-cat').value
+    };
 
-    try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
-            method: 'POST',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productData)
-        });
+    const url = currentEditId 
+        ? `${SUPABASE_URL}/rest/v1/products?id=eq.${currentEditId}` 
+        : `${SUPABASE_URL}/rest/v1/products`;
+    
+    const method = currentEditId ? 'PATCH' : 'POST';
 
-        if (res.ok) {
-            alert("✅ Муваффақият! Маҳсулот илова шуд.");
-            loadProducts();
-            closeAdmin();
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-            document.getElementById('p-img').value = '';
-        } else {
-            const err = await res.json();
-            alert("❌ Хатогӣ: " + err.message);
-        }
-    } catch (e) {
-        alert("Хатои интернет!");
+    const res = await fetch(url, {
+        method: method,
+        headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+        alert("Бомуваффақият иҷро шуд!");
+        resetForm();
+        loadProducts();
     }
 }
 
-// Функсияҳои ёрирасон (Сабад ва Админ)
-function addToCart(id, name, price) {
-    const item = cart.find(i => i.id === id);
-    if (item) item.qty++; else cart.push({ id, name, price, qty: 1 });
-    updateCart();
+async function deleteProduct(id) {
+    if (!confirm("Мехоҳед ин маҳсулотро нест кунед?")) return;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (res.ok) loadProducts();
 }
 
-function updateCart() {
-    const badge = document.getElementById('cart-badge');
-    if(badge) badge.innerText = cart.length;
-    // Дар ин ҷо метавонед коди намоиши сабадро илова кунед
+function resetForm() {
+    currentEditId = null;
+    document.getElementById('save-btn').innerText = "Илова кардан";
+    document.querySelectorAll('.admin-input').forEach(i => i.value = '');
 }
 
-function openAdmin() { document.getElementById('admin-modal').style.display = 'flex'; }
-function closeAdmin() { document.getElementById('admin-modal').style.display = 'none'; }
-function checkAdminPass() {
-    if(document.getElementById('admin-pass').value === "admin777") {
-        document.getElementById('admin-auth').style.display = 'none';
-        document.getElementById('admin-content').style.display = 'block';
-    } else alert("Парол хато!");
+// 3. ПАРДОХТ (ОПТИМИЗАЦИЯ)
+function checkout() {
+    if (cart.length === 0) return alert("Сабад холӣ аст!");
+    let text = "🚀 Навбати нав:\n\n";
+    cart.forEach(i => text += `🔹 ${i.name} x ${i.qty} = ${i.price * i.qty}смн\n`);
+    text += `\n💰 Ҷамъ: ${document.getElementById('grand-total').innerText}`;
+    
+    const url = `https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`;
+    fetch(url).then(() => {
+        alert("Закази шумо қабул шуд! Ба наздикӣ тамос мегирем.");
+        cart = [];
+        updateCartUI();
+        toggleCart();
+    });
 }
 
 document.addEventListener('DOMContentLoaded', loadProducts);
