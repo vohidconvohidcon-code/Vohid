@@ -1,109 +1,146 @@
-const SUPABASE_URL = 'https://yjoomrfdkmrlspakcikb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlqb29tcmZka21ybHNwYWtjaWtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MjUyODIsImV4cCI6MjA4OTQwMTI4Mn0.QnWDad_ES313_5r-PIpCkqNkHpMN0jxCdOn5dOkXESE'; // Калиди худро гузоред
-const MY_WALLET = "175333223"; // РАҚАМИ ҲАМЁНИ ШУМО (Алиф / Душанбе Сити)
-const TG_TOKEN = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA'; 
+const URL = 'https://yjoomrfdkmrlspakcikb.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlqb29tcmZka21ybHNwYWtjaWtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MjUyODIsImV4cCI6MjA4OTQwMTI4Mn0.QnWDad_ES313_5r-PIpCkqNkHpMN0jxCdOn5dOkXESE'; 
+const TG_BOT = '8481595290:AAHoqXeF-NYPEbgNjs8CPhy138ULHYGenlA';
 const CHAT_ID = '1288252509';
+const MY_WALLET = "175333223"; 
 
+let products = [];
 let cart = [];
 
-// 1. ИДОРАКУНИИ САБАД
+// БОРКУНИИ МАҲСУЛОТ
+async function loadProducts() {
+    const res = await fetch(`${URL}/rest/v1/products?select=*&order=id.desc`, { headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` } });
+    products = await res.json();
+    renderProducts('Ҳама');
+}
+
+function renderProducts(cat) {
+    const grid = document.getElementById('product-grid');
+    const filtered = cat === 'Ҳама' ? products : products.filter(p => p.cat === cat);
+    grid.innerHTML = filtered.map(p => `
+        <div class="card">
+            <img src="${p.img || 'https://via.placeholder.com/150'}">
+            <h4>${p.name}</h4>
+            <p style="color:#e74c3c; font-weight:bold">${p.price} смн</p>
+            <button onclick="addToCart(${p.id}, '${p.name}', ${p.price})" style="background:#1a252f; color:white; border:none; padding:8px; width:100%; border-radius:5px; cursor:pointer">🛒 Харидан</button>
+        </div>
+    `).join('');
+}
+
+// САБАД
 function addToCart(id, name, price) {
     cart.push({ id, name, price });
     document.getElementById('cart-count').innerText = cart.length;
-    alert(`"${name}" ба сабад илова шуд!`);
 }
 
-// 2. КУШОДАНИ ПАНЕЛИ ПАРДОХТ
-function openCheckout() {
-    if (cart.length === 0) return alert("Сабад холӣ аст!");
-    document.getElementById('checkout-modal').style.display = 'block';
-    
-    let total = cart.reduce((sum, i) => sum + i.price, 0);
-    document.getElementById('order-summary').innerText = `Ҷамъ: ${total} смн`;
-}
-
-// 3. НУСХАБАРДОРИИ РАҚАМИ ҲАМЁН
-function copyWallet() {
-    navigator.clipboard.writeText(MY_WALLET);
-    alert("Рақами ҳамён нусхабардорӣ шуд: " + MY_WALLET);
-}
-
-// 4. ФИРИСТОДАНИ ЗАКАЗ
-async function submitOrder() {
-    const name = document.getElementById('cust-name').value;
-    const phone = document.getElementById('cust-phone').value;
-    const addr = document.getElementById('cust-addr').value;
-    const delivery = document.getElementById('delivery-type').value;
-    const payment = document.getElementById('payment-method').value;
-    const receipt = document.getElementById('receipt-url').value;
-
-    if (!name || !phone) return alert("Ном ва телефонро ворид кунед!");
-
-    const itemsText = cart.map(i => `${i.name}`).join(", ");
-    const total = cart.reduce((sum, i) => sum + i.price, 0);
-
-    const orderData = {
-        items: itemsText,
-        total_price: total,
-        customer_name: name,
-        customer_phone: phone,
-        customer_address: addr,
-        delivery_type: delivery,
-        payment_method: payment,
-        receipt_img: receipt,
-        status: 'Дар интизорӣ'
-    };
-
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-    });
-
-    if (res.ok) {
-        // Фиристодан ба Telegram
-        const msg = `🚀 ЗАКАЗИ НАВ!\n👤 Харидор: ${name}\n📞 Тел: ${phone}\n📍 Суроға: ${addr}\n🚚 Намуд: ${delivery}\n💳 Пардохт: ${payment}\n💰 Сумма: ${total} смн\n📝 Статус: Интизорӣ`;
-        fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
-        
-        alert("Закази шумо қабул шуд!");
-        cart = [];
-        location.reload();
+function openModal(id) {
+    document.getElementById(id).style.display = 'block';
+    if(id === 'checkout-modal') {
+        const total = cart.reduce((sum, i) => sum + i.price, 0);
+        document.getElementById('cart-summary').innerHTML = `Ҷамъ: <b>${total} смн</b><br><small>${cart.map(i => i.name).join(', ')}</small>`;
     }
 }
 
-// 5. ПАНЕЛИ АДМИН: ТАСДИҚ Ё РАД
-async function updateStatus(id, newStatus, phone) {
-    await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${id}`, {
-        method: 'PATCH',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
+function toggleBank(val) { document.getElementById('bank-panel').style.display = (val === 'Бонк' ? 'block' : 'none'); }
+function copyWallet() { navigator.clipboard.writeText(MY_WALLET); alert("Рақами ҳамён нусха шуд!"); }
+
+// ФИРИСТОДАНИ ЗАКАЗ
+async function sendOrder() {
+    const orderData = {
+        customer_name: document.getElementById('c-name').value,
+        customer_phone: document.getElementById('c-phone').value,
+        customer_address: document.getElementById('c-addr').value,
+        delivery_type: document.getElementById('c-del').value,
+        payment_method: document.getElementById('c-pay').value,
+        items_list: cart.map(i => i.name).join(", "),
+        total_amount: cart.reduce((sum, i) => sum + i.price, 0),
+        receipt_url: document.getElementById('c-receipt').value
+    };
+
+    if(!orderData.customer_name || !orderData.customer_phone) return alert("Ном ва телефонро нависед!");
+
+    const res = await fetch(`${URL}/rest/v1/orders`, {
+        method: 'POST',
+        headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
     });
 
-    // Хабар ба Telegram дар бораи тасдиқ/рад
-    const msg = `📢 ЗАКАЗ №${id}\nСтатус: ${newStatus === 'Тасдиқ' ? '✅ Тасдиқ шуд' : '❌ Рад шуд'}`;
-    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
-    
-    alert("Заказ " + newStatus);
-    loadOrders();
+    if(res.ok) {
+        const msg = `📦 ЗАКАЗИ НАВ!\n👤: ${orderData.customer_name}\n📞: ${orderData.customer_phone}\n💰: ${orderData.total_amount}смн\n💳: ${orderData.payment_method}`;
+        fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
+        alert("Закази шумо қабул шуд!");
+        cart = []; location.reload();
+    }
 }
 
-async function loadOrders() {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&order=created_at.desc`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+// ИСТОРИЯ
+async function getUserHistory() {
+    const phone = document.getElementById('h-phone').value;
+    const res = await fetch(`${URL}/rest/v1/orders?customer_phone=eq.${phone}&order=id.desc`, { headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` } });
+    const data = await res.json();
+    document.getElementById('history-list').innerHTML = data.map(o => `
+        <div class="order-card">
+            <p>Заказ №${o.id} - <span class="status-${o.status}">${o.status}</span></p>
+            <p>${o.items_list}</p>
+            <small>${new Date(o.created_at).toLocaleString()}</small>
+        </div>
+    `).join('') || "Заказ ёфт нашуд";
+}
+
+// АДМИН
+function openAdmin() { openModal('admin-modal'); }
+function loginAdmin() { 
+    if(document.getElementById('admin-pass').value === '1234') { 
+        document.getElementById('admin-auth').style.display='none'; 
+        document.getElementById('admin-area').style.display='block'; 
+        loadAdminOrders(); 
+    } 
+}
+
+async function addProduct() {
+    const p = { 
+        name: document.getElementById('p-name').value, 
+        price: parseFloat(document.getElementById('p-price').value), 
+        img: document.getElementById('p-img').value, 
+        cat: document.getElementById('p-cat').value 
+    };
+    await fetch(`${URL}/rest/v1/products`, {
+        method: 'POST',
+        headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(p)
     });
-    const orders = await res.json();
-    const list = document.getElementById('admin-orders-list');
-    list.innerHTML = orders.map(o => `
-        <div class="order-item" style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:10px;">
-            <p><b>Заказ №${o.id}</b> | Статус: <span class="status-${o.status}">${o.status}</span></p>
-            <p>👤 ${o.customer_name} (${o.customer_phone})</p>
-            <p>🛍️ ${o.items}</p>
-            <p>🚚 ${o.delivery_type} | 💳 ${o.payment_method}</p>
-            ${o.receipt_img ? `<a href="${o.receipt_img}" target="_blank">🖼️ Дидани Чек</a>` : ''}
-            <div style="margin-top:10px;">
-                <button onclick="updateStatus(${o.id}, 'Тасдиқ')" style="background:green; color:white; border:none; padding:5px 15px; border-radius:5px;">Ок</button>
-                <button onclick="updateStatus(${o.id}, 'Рад')" style="background:red; color:white; border:none; padding:5px 15px; border-radius:5px; margin-left:10px;">Рад кардан</button>
+    alert("Илова шуд!"); loadProducts();
+}
+
+async function loadAdminOrders() {
+    const res = await fetch(`${URL}/rest/v1/orders?select=*&order=id.desc`, { headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` } });
+    const data = await res.json();
+    document.getElementById('admin-order-list').innerHTML = data.map(o => `
+        <div class="order-card">
+            <p><b>№${o.id}</b> | ${o.customer_name} (${o.customer_phone})</p>
+            <p>${o.items_list} | <b>${o.total_amount}смн</b></p>
+            <p>Статус: <span class="status-${o.status}">${o.status}</span></p>
+            ${o.receipt_url ? `<a href="${o.receipt_url}" target="_blank">🖼️ Дидани Чек</a>` : ''}
+            <div>
+                <button onclick="updateOrderStatus(${o.id}, 'Тасдиқ')" style="background:green; color:white;">Ок</button>
+                <button onclick="updateOrderStatus(${o.id}, 'Рад')" style="background:red; color:white;">Рад</button>
             </div>
         </div>
     `).join('');
 }
+
+async function updateOrderStatus(id, status) {
+    await fetch(`${URL}/rest/v1/orders?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { 'apikey': KEY, 'Authorization': `Bearer ${KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+    });
+    loadAdminOrders();
+}
+
+function switchTab(tab) {
+    document.getElementById('tab-orders').style.display = tab === 'orders' ? 'block' : 'none';
+    document.getElementById('tab-add').style.display = tab === 'add' ? 'block' : 'none';
+}
+function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
+document.addEventListener('DOMContentLoaded', loadProducts);
