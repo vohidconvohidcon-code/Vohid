@@ -86,3 +86,24 @@ async function updateStatus(id, newStatus, phone) {
     alert("Заказ " + newStatus);
     loadOrders();
 }
+
+async function loadOrders() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&order=created_at.desc`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const orders = await res.json();
+    const list = document.getElementById('admin-orders-list');
+    list.innerHTML = orders.map(o => `
+        <div class="order-item" style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:10px;">
+            <p><b>Заказ №${o.id}</b> | Статус: <span class="status-${o.status}">${o.status}</span></p>
+            <p>👤 ${o.customer_name} (${o.customer_phone})</p>
+            <p>🛍️ ${o.items}</p>
+            <p>🚚 ${o.delivery_type} | 💳 ${o.payment_method}</p>
+            ${o.receipt_img ? `<a href="${o.receipt_img}" target="_blank">🖼️ Дидани Чек</a>` : ''}
+            <div style="margin-top:10px;">
+                <button onclick="updateStatus(${o.id}, 'Тасдиқ')" style="background:green; color:white; border:none; padding:5px 15px; border-radius:5px;">Ок</button>
+                <button onclick="updateStatus(${o.id}, 'Рад')" style="background:red; color:white; border:none; padding:5px 15px; border-radius:5px; margin-left:10px;">Рад кардан</button>
+            </div>
+        </div>
+    `).join('');
+}
