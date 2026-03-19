@@ -239,6 +239,57 @@ body {
     overflow-y: auto;
 }
 
+/* Дизайни кортҳои маҳсулот */
+.product-card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    position: relative;
+}
+.product-card:hover { transform: translateY(-5px); }
+.badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    background: #27ae60; color: white;
+    padding: 4px 10px; border-radius: 20px; font-size: 12px;
+}
+
+/* Панели Админ */
+.admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    background: #f9f9f9;
+    margin-bottom: 5px;
+    border-radius: 8px;
+}
+.edit-btn { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 5px; }
+.del-btn { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-left: 5px; }
+
+/* Формаи зебо */
+.admin-input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+}
+#save-btn {
+    width: 100%;
+    padding: 15px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 hr { margin: 20px 0; border: 0; border-top: 1px solid #eee; }
 
 .modal-box h2 { margin-bottom: 20px; text-align: center; }
