@@ -1,308 +1,37 @@
-/* ТАНЗИМОТИ УМУМӢ */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
+body { margin: 0; background-color: #f5f7fa; color: #333; }
 
-* { box-sizing: border-box; font-family: sans-serif; }
-body { margin: 0; background: #f4f4f4; }
-header { background: #2c3e50; color: white; padding: 15px; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
-.category-nav { display: flex; overflow-x: auto; padding: 10px; gap: 10px; background: white; }
-.category-nav button { border: none; padding: 10px 20px; border-radius: 20px; background: #ddd; cursor: pointer; white-space: nowrap; }
-.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; }
-.product-card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 5px; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; }
-.modal-content { background: white; width: 90%; max-width: 400px; margin: 20% auto; padding: 20px; border-radius: 10px; }
-.admin-item { display: flex; justify-content: space-between; background: #eee; padding: 10px; margin-top: 5px; border-radius: 5px; }
+header { background: #2c3e50; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.logo { color: white; font-size: 22px; font-weight: bold; cursor: pointer; }
+.header-btns button { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+.btn-cart { background: #27ae60; color: white; }
+.btn-history { background: #f39c12; color: white; }
 
-body {
-    background-color: #f4f7f6;
-    color: #333;
-}
+.categories { display: flex; gap: 10px; padding: 15px; overflow-x: auto; background: white; }
+.categories button { padding: 10px 20px; border: none; background: #e2e8f0; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: bold; }
+.categories button:hover { background: #cbd5e1; }
 
-:root {
-    --primary: #27ae60;
-    --dark: #2c3e50;
-    --light: #f4f7f6;
-}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; padding: 20px; }
+.card { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+.card h4 { margin: 5px 0; font-size: 16px; }
+.card .price { color: #e74c3c; font-weight: bold; font-size: 18px; margin-bottom: 10px; }
+.card button { width: 100%; padding: 10px; background: #34495e; color: white; border: none; border-radius: 8px; cursor: pointer; }
 
-body {
-    background-color: var(--light);
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-}
+/* Модалҳо (Тирезаҳои болоӣ) */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; overflow-y: auto; }
+.modal-box { background: white; width: 90%; max-width: 500px; margin: 40px auto; padding: 25px; border-radius: 15px; position: relative; }
+.admin-box { max-width: 700px; }
+.close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888; }
 
-header {
-    background: white;
-    padding: 15px 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
+input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; }
+.btn-submit { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
 
-.main-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    padding: 30px 5%;
-}
+.summary-box { background: #fdf2e9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #e67e22; }
+.bank-box { background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px dashed #3498db; }
+.btn-copy { background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
 
-.card {
-    background: white;
-    border-radius: 15px;
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.3s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    border: 1px solid #eee;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
-
-.card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 15px;
-}
-
-.card h4 { margin: 10px 0; color: var(--dark); }
-
-.card .price {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: var(--primary);
-    margin-bottom: 15px;
-}
-
-.btn-buy {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    width: 100%;
-    font-weight: bold;
-}
-
-/* Стили модал (Панели Админ) */
-.modal-content {
-    border-radius: 20px !important;
-    padding: 30px !important;
-    border: none !important;
-}
-
-input, select {
-    border: 1px solid #ddd !important;
-    padding: 12px !important;
-    border-radius: 8px !important;
-    margin-bottom: 15px !important;
-}
-
-/* ҚИСМИ БОЛОӢ (HEADER) */
-header {
-    background: #ffffff;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo {
-    font-size: 20px;
-    font-weight: bold;
-    color: #2c3e50;
-    cursor: pointer;
-}
-
-.cart-btn {
-    background: #3498db;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-.cart-btn:hover { background: #2980b9; }
-
-.cart-badge {
-    background: #e74c3c;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-left: 5px;
-}
-
-/* КАТЕГОРИЯҲО */
-.categories {
-    display: flex;
-    gap: 10px;
-    padding: 20px;
-    overflow-x: auto;
-    background: white;
-    margin-bottom: 20px;
-}
-
-.categories button {
-    background: #ecf0f1;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-weight: 500;
-    transition: 0.3s;
-}
-
-.categories button:hover {
-    background: #2ecc71;
-    color: white;
-}
-
-/* МАЙДОНИ МАҲСУЛОТ (ГРИД) */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 15px;
-    padding: 0 20px 20px 20px;
-}
-
-.product-card {
-    background: white;
-    border-radius: 15px;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    position: relative;
-    transition: transform 0.2s;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-}
-
-.badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #f1c40f;
-    color: #333;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-.product-card img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-.product-card h3 {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.price {
-    color: #e74c3c;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.product-card button {
-    width: 100%;
-    background: #2ecc71;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.product-card button:hover { background: #27ae60; }
-
-/* ПАНЕЛИ АДМИН (МОДАЛ) */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    width: 90%;
-    max-width: 400px;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 15px;
-    position: relative;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px; right: 15px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #7f8c8d;
-}
-
-.admin-input {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.btn-primary {
-    width: 100%; padding: 10px; border: none; border-radius: 8px;
-    background: #3498db; color: white; cursor: pointer; font-weight: bold;
-}
-
-.btn-success {
-    width: 100%; padding: 10px; border: none; border-radius: 8px;
-    background: #2ecc71; color: white; cursor: pointer; font-weight: bold; margin-top: 10px;
-}
-
-.admin-list-container {
-    margin-top: 15px;
-}
-
-.admin-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    border: 1px solid #eee;
-}
-
-.btn-edit { background: #f39c12; border: none; padding: 5px 10px; border-radius: 5px; color: white; cursor: pointer;}
-.btn-del { background: #e74c3c; border: none; padding: 5px 10px; border-radius: 5px; color: white; cursor: pointer;}
+.admin-item { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+.status-Интизорӣ { color: #f39c12; font-weight: bold; }
+.status-Тасдиқ { color: #27ae60; font-weight: bold; }
+.status-Рад { color: #e74c3c; font-weight: bold; }
