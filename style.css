@@ -35,23 +35,39 @@ input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px sol
 .status-Интизорӣ { color: #f39c12; font-weight: bold; }
 .status-Тасдиқ { color: #27ae60; font-weight: bold; }
 .status-Рад { color: #e74c3c; font-weight: bold; }
-
-/* Тугмаи Dushanbe City */
+/* Дизайни махсус барои тугмаи Dushanbe City */
 .btn-dc {
-    display: block;
-    background: #f1c40f; /* Ранги зарди монанди DC */
-    color: #333;
-    text-align: center;
-    padding: 15px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); /* Ранги тиллоии DC */
+    color: #2c3e50 !important;
+    text-decoration: none !important;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-weight: 800;
     font-size: 16px;
-    margin: 10px 0;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: background 0.3s;
+    margin: 15px 0;
+    border: 2px solid #e67e22;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .btn-dc:hover {
-    background: #f39c12;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5);
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+}
+
+.btn-dc::before {
+    content: '💳'; /* Иконаи корт */
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+/* Эффекти пахшкунӣ */
+.btn-dc:active {
+    transform: translateY(1px);
 }
