@@ -3,91 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ёвар Shop - Касбӣ</title>
+    <title>Ёвар Shop</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <div class="logo" onclick="openAdmin()">🛒 ЁВАР SHOP</div>
-        <div class="header-nav">
-            <button onclick="openModal('history-modal')">📜 История</button>
-            <button class="cart-btn" onclick="openModal('checkout-modal')">🛍️ Сабад: <span id="cart-count">0</span></button>
+        <div class="logo" onclick="openModal('admin-modal')">🛒 ЁВАР SHOP</div>
+        <div class="header-btns">
+            <button class="btn-history" onclick="openModal('history-modal')">📜 История</button>
+            <button class="btn-cart" onclick="openCheckout()">🛍️ Сабад: <span id="cart-count">0</span></button>
         </div>
     </header>
 
-    <nav class="cats-bar">
+    <nav class="categories">
         <button onclick="renderProducts('Ҳама')">Ҳама</button>
         <button onclick="renderProducts('Ширӣ')">Ширӣ</button>
         <button onclick="renderProducts('Нӯшокиҳо')">Нӯшокиҳо</button>
         <button onclick="renderProducts('Хӯрокворӣ')">Хӯрокворӣ</button>
     </nav>
 
-    <main id="product-grid" class="main-grid"></main>
+    <main id="products-container" class="grid"></main>
 
     <div id="checkout-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-box">
             <span class="close" onclick="closeModals()">&times;</span>
-            <h2>Тасдиқи Харид</h2>
+            <h2>Расмӣ кардани заказ</h2>
             <div id="cart-summary" class="summary-box"></div>
-            <input type="text" id="c-name" placeholder="Номи пурра">
-            <input type="text" id="c-phone" placeholder="Рақами телефон (900000000)">
-            <input type="text" id="c-addr" placeholder="Суроғаи дақиқ">
+            
+            <input type="text" id="c-name" placeholder="Номи шумо">
+            <input type="text" id="c-phone" placeholder="Рақами телефон (масалан: 900112233)">
+            <input type="text" id="c-addr" placeholder="Суроғаи доставка">
+            
             <select id="c-del">
                 <option value="Доставка">🚚 Доставка</option>
                 <option value="Худам мегирам">🏠 Худам мегирам</option>
             </select>
-            <select id="c-pay" onchange="toggleBank(this.value)">
+            
+            <select id="c-pay" onchange="toggleBankInfo(this.value)">
                 <option value="Нақд">💵 Нақд (ҳангоми қабул)</option>
                 <option value="Бонк">💳 Корти Бонкӣ (Алиф/Душанбе Сити)</option>
             </select>
-            <div id="bank-panel" class="bank-info" style="display:none;">
-                <p>Рақами ҳамён: <b id="wallet-id">900001122</b></p>
-                <button onclick="copyWallet()">📋 Нусхабардорӣ</button>
-                <p>Скриншоти чекро ба ягон сайт бор кунед ва ссылкаашро инҷо гузоред:</p>
-                <input type="text" id="c-receipt" placeholder="https://example.com/screenshot.jpg">
+            
+            <div id="bank-info" class="bank-box" style="display:none;">
+                <p>Рақами ҳамён: <b id="wallet-num">900001122</b> 
+                <button onclick="copyWallet()" class="btn-copy">📋 Копия</button></p>
+                <p style="font-size: 13px;">Скриншоти чекро ба ягон сайт бор карда ссылкаашро гузоред:</p>
+                <input type="text" id="c-receipt" placeholder="Ссылка ба чек (ҳатмӣ нест)">
             </div>
-            <button class="btn-confirm" onclick="sendOrder()">🚀 ФИРИСТОДАН</button>
+            
+            <button class="btn-submit" onclick="submitOrder()">🚀 ФИРИСТОДАНИ ЗАКАЗ</button>
         </div>
     </div>
 
     <div id="history-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-box">
             <span class="close" onclick="closeModals()">&times;</span>
-            <h2>Таърихи харидҳои шумо</h2>
+            <h2>Историяи Шумо</h2>
             <input type="text" id="h-phone" placeholder="Рақами телефонатонро нависед">
-            <button onclick="getUserHistory()" class="btn-check">Ҷустуҷӯ</button>
+            <button class="btn-submit" onclick="checkHistory()">Ҷустуҷӯ</button>
             <div id="history-list"></div>
         </div>
     </div>
 
     <div id="admin-modal" class="modal">
-        <div class="modal-content admin-panel">
+        <div class="modal-box admin-box">
             <span class="close" onclick="closeModals()">&times;</span>
-            <div id="admin-auth">
-                <h3>Даромад ба Админ</h3>
-                <input type="password" id="admin-pass" placeholder="Рамз">
-                <button onclick="loginAdmin()">Даромад</button>
+            <div id="admin-login-area">
+                <h3>Вуруд ба Админ</h3>
+                <input type="password" id="admin-pass" placeholder="Рамз (1234)">
+                <button class="btn-submit" onclick="loginAdmin()">Даромад</button>
             </div>
-            <div id="admin-area" style="display:none;">
+            <div id="admin-dashboard" style="display:none;">
                 <div class="admin-tabs">
-                    <button onclick="switchTab('orders')">Заказҳо</button>
-                    <button onclick="switchTab('add')">Иловаи Маҳсулот</button>
+                    <button onclick="switchAdminTab('orders')">📦 Заказҳо</button>
+                    <button onclick="switchAdminTab('add')">➕ Иловаи маҳсулот</button>
                 </div>
+                
                 <div id="tab-orders">
-                    <h3>Заказҳои охирин</h3>
-                    <div id="admin-order-list"></div>
+                    <h3>Рӯйхати Заказҳо</h3>
+                    <div id="admin-orders-list"></div>
                 </div>
+                
                 <div id="tab-add" style="display:none;">
                     <h3>Маҳсулоти нав</h3>
                     <input type="text" id="p-name" placeholder="Номи маҳсулот">
-                    <input type="number" id="p-price" placeholder="Нарх">
+                    <input type="number" id="p-price" placeholder="Нарх (смн)">
                     <input type="text" id="p-img" placeholder="Ссылкаи расм">
                     <select id="p-cat">
                         <option value="Ширӣ">Ширӣ</option>
                         <option value="Нӯшокиҳо">Нӯшокиҳо</option>
                         <option value="Хӯрокворӣ">Хӯрокворӣ</option>
                     </select>
-                    <button onclick="addProduct()" class="btn-add">ИЛОВА КАРДАН</button>
+                    <button class="btn-submit" onclick="addNewProduct()">Сабт кардан</button>
                 </div>
             </div>
         </div>
