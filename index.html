@@ -41,14 +41,18 @@
             
             <select id="c-pay" onchange="toggleBankInfo(this.value)">
                 <option value="Нақд">💵 Нақд (ҳангоми қабул)</option>
-                <option value="Бонк">💳 Корти Бонкӣ (Алиф/Душанбе Сити)</option>
+                <option value="Бонк">💳 Корти Бонкӣ (Душанбе Сити)</option>
             </select>
             
-            <div id="bank-info" class="bank-box" style="display:none;">
-                <p>Рақами ҳамён: <b id="wallet-num">900001122</b> 
-                <button onclick="copyWallet()" class="btn-copy">📋 Копия</button></p>
-                <p style="font-size: 13px;">Скриншоти чекро ба ягон сайт бор карда ссылкаашро гузоред:</p>
-                <input type="text" id="c-receipt" placeholder="Ссылка ба чек (ҳатмӣ нест)">
+           <div id="bank-info" class="bank-box" style="display:none;">
+                <p>Барои пардохт тугмаи зерро пахш кунед:</p>
+                
+                <a href="https://dc.tj/pay/http://pay.expresspay.tj/?A=5058270371967901&s=&c=&f1=133&FIELD2=&FIELD3=" target="_blank" class="btn-dc">
+                    💳 Пардохт тариқи Dushanbe City
+                </a>
+                
+                <p style="font-size: 13px; margin-top: 15px;">Баъди пардохт кардан, чекро ба ягон сайт бор кунед ва ссылкаашро инҷо гузоред (ҳатмӣ нест):</p>
+                <input type="text" id="c-receipt" placeholder="Ссылка ба чек">
             </div>
             
             <button class="btn-submit" onclick="submitOrder()">🚀 ФИРИСТОДАНИ ЗАКАЗ</button>
