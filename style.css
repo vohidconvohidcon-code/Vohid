@@ -71,3 +71,45 @@ input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px sol
 .btn-dc:active {
     transform: translateY(1px);
 }
+
+/* Дизайни Логотип ва Сабад */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Калонии логотипи асосиро аз инҷо идора кунед */
+.shop-logo {
+    height: 50px; 
+    width: auto;
+    object-fit: contain;
+}
+
+.cart-button {
+    display: flex;
+    align-items: center;
+    background-color: #3498db; /* Ранги тугмаи сабад */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.cart-button:hover {
+    background-color: #2980b9;
+}
+
+/* Калонии расми дохили сабадро аз инҷо идора кунед */
+.cart-icon {
+    height: 24px; 
+    width: auto;
+    margin-right: 8px;
+}
