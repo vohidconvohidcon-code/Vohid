@@ -1,7 +1,7 @@
 * { box-sizing: border-box; font-family: Arial, sans-serif; }
 body { margin: 0; background-color: #f5f7fa; color: #333; }
 
-header { background: #2c3e50; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+header { background: red; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 .logo { color: white; font-size: 22px; font-weight: bold; cursor: pointer; }
 .header-btns button { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: 10px; }
 .btn-cart { background: #27ae60; color: white; }
